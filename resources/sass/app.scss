@@ -1,0 +1,313 @@
+// --- Fonts ---
+@import url('https://fonts.bunny.net/css?family=Nunito');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+// --- Variables & Configuration ---
+@import 'variables';
+
+$my-custom-dark: #121212;
+$dark: $my-custom-dark;
+
+
+// --- Frameworks & Icons ---
+@import 'bootstrap/scss/bootstrap';
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+
+// --- Base Styles ---
+body {
+    font-family: 'Inter', sans-serif !important;
+    letter-spacing: -0.02rem;
+}
+
+h1, h2, h3, .fw-bold {
+    letter-spacing: -0.05rem;
+}
+
+// --- Feature Section ---
+.feature-icon-wrapper {
+    width: 60px;
+    height: 60px;
+    background-color: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+}
+
+.feature-card {
+    transition: all 0.3s ease-in-out;
+    border-radius: 15px;
+
+    &:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 1rem 3rem rgba(0,0,0,0.1) !important;
+        cursor: pointer;
+
+        .feature-icon-wrapper {
+            background-color: #000;
+        }
+
+        .bi {
+            color: #fff !important;
+        }
+    }
+}
+
+// --- Hero Carousel ---
+#axonHeroCarousel {
+    background-color: #ffffff;
+    padding: 50px 0;
+
+    .carousel-indicators {
+        position: absolute;
+        bottom: 20px;
+        margin-bottom: 0;
+        z-index: 15;
+    }
+}
+
+.hero-product-img {
+    max-height: 400px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
+}
+
+// --- Carousel Indicators ---
+.custom-indicators-dark {
+    margin-bottom: 0rem;
+
+    button {
+        width: 40px !important;
+        height: 3px !important;
+        background-color: #adb5bd !important;
+        border: none !important;
+        position: relative;
+        transition: all 0.3s ease;
+
+        &.active {
+            background-color: #4f5053 !important;
+
+            &::after {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width: 0;
+                background-color: #000;
+                animation: fill-indicator 5s linear forwards;
+            }
+        }
+    }
+}
+
+// --- News Ticker ---
+.news-ticker-bar {
+    background-color: #f3f0f7;
+    height: 45px;
+    overflow: hidden;
+}
+
+.ticker-link {
+    font-size: 2rem;
+    font-weight: 500;
+    color: #1a1a1a;
+    line-height: 45px;
+    display: inline-block;
+}
+
+.custom-ticker-text {
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.5px;
+    color: #000000 !important;
+}
+
+// --- Vertical Animations ---
+.carousel.vertical {
+    .carousel-item {
+        transition: transform 0.6s ease-in-out;
+    }
+
+    .carousel-item-next:not(.carousel-item-start),
+    .active.carousel-item-end {
+        transform: translateY(100%);
+    }
+
+    .carousel-item-prev:not(.carousel-item-end),
+    .active.carousel-item-start {
+        transform: translateY(-100%);
+    }
+
+    .active.carousel-item-next.carousel-item-start,
+    .active.carousel-item-prev.carousel-item-end {
+        transform: translateY(0);
+    }
+}
+
+#newsTicker {
+    .carousel-control-prev,
+    .carousel-control-next {
+        width: 40px;
+        height: 100%;
+        opacity: 0.7;
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+}
+
+// --- UI Components & Footer ---
+.btn-white {
+    background-color: #ffffff!important;
+    color: #000000;
+    transition: all 0.3s ease;
+
+    &:hover {
+        background-color: #f1f1f1;
+        color: #000000;
+    }
+}
+
+footer {
+    a.text-secondary:hover {
+        color: #ffffff !important;
+    }
+
+    .bi:hover {
+        color: #f1f1f1;
+    }
+}
+
+// --- Keyframes ---
+@keyframes fill-indicator {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+// --- Media Queries ---
+@media (max-width: 768px) {
+    .hero-product-img {
+        max-height: 250px;
+        margin-bottom: 20px;
+    }
+    
+    .display-3 {
+        font-size: 2.5rem;
+    }
+}
+
+.hover-shadow:hover {
+    filter: brightness(0.9);
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+/* Osnovna linija slidera */
+#price-slider {
+    height: 6px;
+    background: #e9ecef;
+    border: none;
+    border-radius: 10px;
+    margin: 0 15px; /* Da kružići ne bi bežali van ivica */
+}
+
+/* Boja popunjenog dela (između dva kružića) */
+#price-slider .noUi-connect {
+    background: #000000;
+}
+
+/* Izgled kružića (handle) */
+#price-slider .noUi-handle {
+    width: 18px;
+    height: 18px;
+    top: -6px;
+    right: -9px;
+    border-radius: 50%;
+    background: #000000;
+    border: 2px solid #000000;
+    box-shadow: none;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+/* Uklanjamo one dve crtice sa kružića */
+#price-slider .noUi-handle:before,
+#price-slider .noUi-handle:after {
+    display: none;
+}
+
+#price-slider .noUi-handle:hover {
+    transform: scale(1.2);
+}
+
+/**/
+
+/* Kontejner za svaki red filtera */
+.filter-item-wrapper {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    transition: all 0.2s;
+}
+
+/* Stil za labelu - pravimo je klikabilnom preko celog reda */
+.filter-label {
+    cursor: pointer;
+    font-size: 14px;
+    color: #444;
+    user-select: none; /* Sprečava selektovanje teksta pri brzom kliktanju */
+    flex-grow: 1;      /* Uzima sav preostali prostor desno */
+    padding-left: 10px;
+    line-height: 1.5;
+}
+
+/* Osnovni stil za checkbox */
+.custom-check-input {
+    appearance: none;      /* Isključuje podrazumevani izgled */
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #ddd;
+    border-radius: 4px;    /* Blago zaobljene ivice */
+    background-color: #fff;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+    flex-shrink: 0;        /* Sprečava skupljanje checkbox-a */
+}
+
+/* Stil kada je checkbox čekiran - postaje crn */
+.custom-check-input:checked {
+    background-color: #000;
+    border-color: #000;
+}
+
+/* Dodavanje bele "kvačice" (checkmark) unutar crnog checkbox-a */
+.custom-check-input:checked::after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 1px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+/* Efekat na labelu kada je čekirano */
+.custom-check-input:checked + .filter-label {
+    color: #000;
+    font-weight: 600;
+}
+
+/* Hover efekat na ceo red */
+.filter-item-wrapper:hover .filter-label {
+    color: #000;
+}
+.filter-item-wrapper:hover .custom-check-input {
+    border-color: #000;
+}
