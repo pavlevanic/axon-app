@@ -59,7 +59,7 @@
 
                             @if (Route::has('password.request'))
                                 <a class="btn btn-link text-dark text-decoration-none small text-center mt-2" href="{{ route('password.request') }}">
-                                    {{ __('Forgot Your Password?') }}
+                                    {{ __('Zaboravljena lozinka?') }}
                                 </a>
                             @endif
                         </div>
@@ -69,7 +69,7 @@
             
             <div class="text-center mt-4">
                 <a href="{{ route('home') }}" class="text-secondary text-decoration-none small">
-                    ← Nazad na prodavnicu
+                    ← Nazad na početnu stranicu
                 </a>
             </div>
         </div>

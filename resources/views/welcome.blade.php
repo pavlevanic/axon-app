@@ -14,25 +14,29 @@
                 @endforeach
             </div>
         
-            <div class="carousel-inner">
+            <div class="carousel-inner mt-4">
                 @if($heroNews->count() > 0)
                     @foreach($heroNews as $key => $news)
                         <div class="carousel-item {{ $key == 0 ? 'active' : '' }}" data-bs-interval="5000">
                             <div style="
-                                background: linear-gradient(90deg,rgb(18, 18, 18),rgba(15,15,15), rgba(0, 0, 0, 0.4)),
+                                background: linear-gradient(rgba(0, 0, 0, 0.5),rgba(15, 15, 15, 0.6)),
                                 url('{{ asset($news->image) }}') center/cover no-repeat;
-                                height: 80vh; 
-                                width: 100%;
+                                height: 70vh; 
+                                width: 90%;
+                                display: flex;
+                                margin-left: auto;
+                                margin-right: auto;
+                                border-radius:15px;
                             " class="d-flex align-items-center">
                                 
-                                <div class="container">
+                                <div class="container p-5">
                                     <div class="row">
                                         <div class="col-lg-8 text-white">
                                             <h1 class="display-2 fw-bold mb-3">{{ $news->title }}</h1>
                                             <p class="lead fs-4 mb-4" style="max-width: 600px; opacity: 0.9;">
                                                 {{ $news->summary }}
                                             </p>
-                                            <a href="{{ route('news.show', $news->slug) }}" class="btn btn-light text-black btn-lg px-5 py-3 rounded-0 fw-bold shadow">
+                                            <a href="{{ route('news.show', $news->slug) }}" class="btn btn-light text-black btn-lg px-5 py-3 rounded-4 fw-bold shadow">
                                                 PROČITAJ VIŠE
                                             </a>
                                         </div>
@@ -51,7 +55,7 @@
                     <h6 class="text-danger fw-bold text-uppercase mb-1">Premium Ponuda</h6>
                     <h2 class="fw-bold display-5">Izdvajamo za vas</h2>
                 </div>
-                <a href="{{route('shop.components')}}" class="btn btn-outline-dark rounded-0 px-4 fw-bold">POGLEDAJ SVE</a>
+                <a href="{{route('shop.prebuilts')}}" class="btn btn-outline-dark rounded-0 px-4 fw-bold">POGLEDAJ SVE</a>
             </div>
         
             <div class="row g-4">

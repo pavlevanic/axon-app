@@ -44,20 +44,6 @@
                 <a class="nav-link text-white me-3" href="#" data-bs-toggle="collapse" data-bs-target="#searchCollapse">
                     <i class="bi bi-search fs-5"></i>
                 </a>
-                
-                @auth
-                    @php
-                        $cartCount = \App\Models\Cart::where('user_id', auth()->id())->sum('quantity');
-                    @endphp
-                    <a class="nav-link text-white me-3 position-relative" href="{{ route('cart.index') }}">
-                        <i class="bi bi-cart3 fs-5"></i>
-                        @if($cartCount > 0)
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
-                                {{ $cartCount }}
-                            </span>
-                        @endif
-                    </a>
-                @endauth
             </div>
     
             <button class="navbar-toggler border-0 " type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
@@ -92,7 +78,7 @@
                         @endphp
                         <li class="nav-item">
                             <a href="{{ route('cart.index') }}" class="nav-link text-white position-relative px-3">
-                                <i class="bi bi-cart3 fs-5"></i>
+                                <i class="bi bi-bag fs-5"></i>
                                 @if($cartCount > 0)
                                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
                                         {{ $cartCount }}

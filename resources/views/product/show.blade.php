@@ -74,7 +74,6 @@
 
             @php
     $allGroups = $product->category->attribute_groups ?? [];
-    // Pronalazimo ključ za grupu "Osnovni" (case-insensitive provera)
     $groupName = isset($allGroups['Osnovni']) ? 'Osnovni' : (isset($allGroups['osnovni']) ? 'osnovni' : null);
     $osnovniKeys = $groupName ? $allGroups[$groupName] : [];
 @endphp
@@ -119,7 +118,7 @@
                 @endif
             </form>
 
-            @auth
+            @if(auth()->check() && auth()->user()->is_admin)
                 <div class="alert alert-secondary mt-4 border-0 shadow-sm">
                     <h6 class="fw-bold">Admin opcije:</h6>
                     <hr>
@@ -132,7 +131,7 @@
                         </form>
                     </div>
                 </div>
-            @endauth
+            @endif
         </div>
     </div>
     

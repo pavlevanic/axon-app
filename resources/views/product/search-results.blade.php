@@ -28,7 +28,7 @@
         <div class="text-center py-5">
             <i class="bi bi-search text-muted" style="font-size: 4rem;"></i>
             <h3 class="mt-3">Nismo pronašli ništa što odgovara vašoj pretrazi.</h3>
-            <p class="text-secondary">Pokušajte sa nekim drugim terminom (npr. RTX, Tastatura, Ryzen...)</p>
+            <p class="text-secondary">Pokušajte sa nekim drugim terminom (npr. RTX,Ryzen...)</p>
             <a href="{{ url('/') }}" class="btn btn-dark rounded-0 mt-3 px-4">Povratak na početnu</a>
         </div>
     @endif

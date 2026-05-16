@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container py-5">
-    <h2 class="fw-bold mb-4"><i class="bi bi-cart3 me-2"></i>Vaša korpa</h2>
+    <h2 class="fw-bold mb-4"><i class="bi bi-bag me-2"></i>Vaša korpa</h2>
 
     @if($cartItems->count() > 0)
     <div class="row">
@@ -112,7 +112,7 @@
     </div>
     @else
     <div class="text-center py-5 shadow-sm bg-white rounded">
-        <i class="bi bi-cart-x display-1 text-muted"></i>
+        <i class="bi bi-bag-x display-1 text-muted"></i>
         <h4 class="mt-4">Vaša korpa je trenutno prazna</h4>
         <p class="text-muted">Dodajte neke proizvode u korpu da biste ih videli ovde.</p>
         <a href="{{ route('home') }}" class="btn btn-dark btn-lg rounded-pill px-5 mt-3 shadow">Započni kupovinu</a>
