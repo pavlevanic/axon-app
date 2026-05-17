@@ -119,18 +119,19 @@
             </form>
 
             @if(auth()->check() && auth()->user()->is_admin)
-                <div class="alert alert-secondary mt-4 border-0 shadow-sm">
-                    <h6 class="fw-bold">Admin opcije:</h6>
-                    <hr>
-                    <div class="d-flex gap-2">
-                        <a href="{{ route('product.edit', $product->id) }}" class="btn btn-dark btn-sm">Izmeni proizvod</a>
-                        <form action="{{ route('product.destroy', $product->id) }}" method="POST" onsubmit="return confirm('Da li ste sigurni?')">
-                            @csrf
-                            @method('DELETE')
-                            <button class="btn btn-danger btn-sm">Obriši</button>
-                        </form>
-                    </div>
+            <div class="alert alert-secondary mt-4 border-0 shadow-sm rounded-0">
+                <h6 class="fw-bold text-uppercase small text-muted mb-3" style="letter-spacing: 0.5px;">
+                    <i class="bi bi-gear-fill me-1"></i> Admin opcije:
+                </h6>
+                <div class="d-flex gap-2">
+                    <a href="{{ route('product.edit', $product->id) }}" class="btn btn-dark btn-sm rounded-0  text-uppercase" style="font-size: 0.75rem;">Izmeni proizvod</a>
+                    <form action="{{ route('product.destroy', $product->id) }}" method="POST" onsubmit="return confirm('Da li ste sigurni?')">
+                        @csrf
+                        @method('DELETE')
+                        <button class="btn btn-danger btn-sm rounded-0  text-uppercase" style="font-size: 0.75rem;">Obriši</button>
+                    </form>
                 </div>
+            </div>
             @endif
         </div>
     </div>
