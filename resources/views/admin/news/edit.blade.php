@@ -56,6 +56,11 @@
                                 {!! old('content', $news->content) !!}
                             </div>
                             <textarea name="content" id="content" style="display: none;"></textarea>
+                            <div class="text-center">
+                            <button type="button" class="btn btn-dark mb-2 text-center mt-1" onclick="openSourceEditor()">
+                                <>Source
+                            </button>
+                        </div>
                         </div>
 
                         {{-- Slika --}}
@@ -81,95 +86,54 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="sourceModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+  
+        <div class="modal-header">
+          <h5 class="modal-title">HTML Source Editor</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+  
+        <div class="modal-body">
+          <textarea id="htmlSource" style="width:100%;height:500px;font-family:monospace;"></textarea>
+        </div>
+  
+        <div class="modal-footer">
+          <button class="btn btn-outline-danger" data-bs-dismiss="modal">Nazad</button>
+          <button class="btn btn-dark" onclick="applySource()">Potvrdi</button>
+        </div>
+  
+      </div>
+    </div>
+  </div>
+  <script>
+    let sourceModal;
 
-<script src="https://cdn.ckeditor.com/ckeditor5/41.0.0/super-build/ckeditor.js"></script>
+document.addEventListener('DOMContentLoaded', function () {
+    sourceModal = new bootstrap.Modal(document.getElementById('sourceModal'));
+});
 
+function openSourceEditor() {
+    const html = window.editor.getData();
+
+    document.getElementById('htmlSource').value = html;
+
+    sourceModal.show();
+}
+
+function applySource() {
+    const html = document.getElementById('htmlSource').value;
+
+    window.editor.setData(html);
+
+    sourceModal.hide();
+}
+  </script>
 <script>
-    let editorInstance;
-
-    function initializeEditor() {
-        // 1. Filtriranje pluginova - izbacujemo sve što traži licencu ili Cloud (AXON optimizacija)
-        const availablePlugins = CKEDITOR.ClassicEditor.builtinPlugins.filter(plugin => {
-            const name = plugin.pluginName;
-            
-            const forbidden = [
-                'Collaboration', 'Comments', 'TrackChanges', 'Presence', 'Revision', 
-                'CloudServices', 'RealTime', 'CKBox', 'CKFinder', 'EasyImage', 
-                'Export', 'Import', 'AIAssistant', 'Adapter', 'CaseChange', 'Suggestions',
-                
-                // Komercijalni pluginovi koji blokiraju rad bez licence
-                'FormatPainter', 
-                'Template', 
-                'SlashCommand', 
-                'PasteFromOfficeEnhanced', 
-                'DocumentOutline', 
-                'TableOfContents', 
-                'Pagination', 
-                'WProofreader', 
-                'MathType', 
-                'ChemType'
-            ];
-
-            // Vraća true samo ako plugin nije na listi zabranjenih
-            return !forbidden.some(word => name.includes(word));
-        });
-
-        // 2. Inicijalizacija editora
-        CKEDITOR.ClassicEditor
-            .create(document.querySelector('#editor'), {
-                plugins: availablePlugins,
-                toolbar: {
-                    items: [
-                        'sourceEditing', '|', // Tvoje dugme za HTML kod
-                        'heading', '|',
-                        'bold', 'italic', 'link', 'bulletedList', 'numberedList', '|',
-                        'outdent', 'indent', '|',
-                        'imageUpload', 'blockQuote', 'insertTable', 'mediaEmbed', 'undo', 'redo'
-                    ],
-                    shouldNotGroupWhenFull: true
-                },
-                // Isključujemo potrebu za licencnim ključem
-                licenseKey: '', 
-                htmlSupport: {
-                    allow: [{
-                        name: /.*/,
-                        attributes: true,
-                        classes: true,
-                        styles: true
-                    }]
-                },
-                simpleUpload: {
-                    uploadUrl: "{{ route('news.upload.image') }}",
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    }
-                },
-                language: 'sr'
-            })
-            .then(editor => {
-                editorInstance = editor;
-                console.log('AXON: Editor je spreman i Source Editing je aktivan!');
-            })
-            .catch(error => {
-                console.error('Kritična greška pri inicijalizaciji:', error);
-            });
-    }
-
-    // 3. Pokretanje nakon što se sve učita
-    window.addEventListener('load', () => {
-        if (typeof CKEDITOR !== 'undefined') {
-            initializeEditor();
-        } else {
-            console.error('CKEditor biblioteka nije dostupna na CDN-u.');
-        }
-    });
-
-    // 4. Sinhronizacija pre slanja forme (kopira HTML iz editora u skriveni textarea)
-    document.getElementById('newsForm').addEventListener('submit', function (e) {
-        if (editorInstance) {
-            const data = editorInstance.getData();
-            document.getElementById('content').value = data;
-        }
-    });
+    document.getElementById('newsForm').addEventListener('submit', function () {
+    document.getElementById('content').value = window.editor.getData();
+});
 </script>
+
 @endsection

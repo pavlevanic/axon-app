@@ -311,3 +311,32 @@ footer {
 .filter-item-wrapper:hover .custom-check-input {
     border-color: #000;
 }
+
+.news-content img {
+    display: block;
+    margin: 30px auto;
+    max-width: 100%;
+    height: auto;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 4px 12px rgba(0,0,0,0.08);
+
+    object-fit: cover;
+}
+
+.news-content figure {
+    text-align: center;
+    margin: 30px auto;
+}
+
+.news-content figure img {
+    margin-bottom: 10px;
+}
+
+.news-content figcaption {
+    color: #777;
+    font-size: 14px;
+    font-style: italic;
+}

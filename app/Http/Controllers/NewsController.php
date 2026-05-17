@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Http\Request;
 use App\Models\News;
 use App\Http\Requests\StoreNewsRequest;
 use App\Http\Requests\UpdateNewsRequest;
@@ -35,7 +35,7 @@ class NewsController extends Controller
         $request->validate([
             'title' => 'required|max:255',
             'content' => 'required',
-            'type' => 'required|in:hero,regular,promo',
+            'type' => 'required|in:hero,normal,promo',
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
@@ -110,28 +110,22 @@ class NewsController extends Controller
     return redirect()->route('news.index')->with('success', 'Vest uspešno ažurirana!');
     }
 
-    public function uploadImage(\Illuminate\Http\Request $request) // Dodao sam kosu crtu ispred Illuminate
+    public function uploadImage(Request $request)
 {
     if ($request->hasFile('upload')) {
+
         $file = $request->file('upload');
-        
-        $filename = time() . '_' . str_replace(' ', '_', $file->getClientOriginalName());
-        
-        // Osiguraj da folder postoji
-        $path = public_path('uploads/news_content');
-        if (!File::isDirectory($path)) {
-            File::makeDirectory($path, 0777, true, true);
-        }
 
-        $file->move($path, $filename);
+        $filename = time().'_'.$file->getClientOriginalName();
 
-        // Vrati URL koji CKEditor može da dohvati
+        $path = $file->storeAs('news_content', $filename, 'public');
+
         return response()->json([
-            'url' => asset('uploads/news_content/' . $filename)
+            'url' => asset('storage/' . $path)
         ]);
     }
 
-    return response()->json(['error' => 'Slika nije pronađena.'], 400);
+    return response()->json(['error' => 'Upload failed'], 400);
 }
 
    
