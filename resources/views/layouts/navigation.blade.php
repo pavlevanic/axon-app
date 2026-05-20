@@ -15,9 +15,9 @@
             <div class="carousel-inner">
                 @foreach($regularNews as $key => $news)
                 <div class="carousel-item {{ $key == 0 ? 'active' : '' }} text-center py-2">
-                    <a href="{{ route('news.show', $news->slug) }}" class="text-decoration-underline text-dark fw-medium small custom-ticker-text bold"> 
+                    <a href="{{ route('news.show', $news->slug) }}" class="text-decoration-underline link-underline-primary text-dark fw-medium small custom-ticker-text bold"> 
                         {{ $news->summary }}
-                        <i class="bi bi-arrow-right ms-1"></i>
+                        <i class="bi bi-arrow-right text-primary ms-1"></i>
                     </a>
                 </div>
                 @endforeach
@@ -90,7 +90,7 @@
                         {{-- Admin Link --}}
                         @if(auth()->user()->is_admin)
                             <li class="nav-item">
-                                <a class="nav-link text-secondary small fw-bold text-uppercase px-3" href="/admin">Admin</a>
+                                <a class="nav-link text-primary small fw-bold text-uppercase px-3" href="/admin">Admin</a>
                             </li>
                         @endif
                     @endauth
@@ -99,10 +99,10 @@
                     @guest
                         <div class="d-flex flex-column flex-md-row align-items-center w-100 justify-content-center">
                             <li class="nav-item">
-                                <a class="nav-link text-white small fw-bold text-uppercase px-2" href="{{ route('login') }}">Login</a>
+                                <a class="nav-link text-white small fw-bold text-uppercase px-2" href="{{ route('login') }}">Prijava</a>
                             </li>
                             <li class="nav-item ms-md-2 mt-2 mt-md-0">
-                                <a class="btn btn-white btn-sm rounded-0 px-3 fw-bold text-uppercase" href="{{ route('register') }}">Register</a>
+                                <a class="btn btn-primary btn-sm rounded-0 px-3 fw-bold text-uppercase" href="{{ route('register') }}">Registracija</a>
                             </li>
                         </div>
                     @else
@@ -115,7 +115,7 @@
                                    onmouseover="this.style.backgroundColor='#444'"
                                    onmouseout="this.style.backgroundColor='transparent'"
                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                    Logout
+                                    Odjavi se
                                 </a>
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
                             </div>
@@ -138,16 +138,6 @@
         </div>
     </div>
     
-    <style>
-        .nav-link {
-            transition: color 0.3s ease;
-        }
-        .nav-link:hover {
-            color: #444 !important;
-        }
-        .navbar-brand:hover {
-            color: #bdbdbd !important;
-        }
-    </style>
+   
 </body>
 </html>

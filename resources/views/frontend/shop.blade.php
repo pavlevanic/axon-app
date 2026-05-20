@@ -4,7 +4,7 @@
 <div class="container py-5">
     <div class="d-flex mb-4">
         @if(Route::currentRouteName() != 'shop.prebuilts' && count($categories) > 0)
-        <button id="toggleBtn" class="btn btn-dark shadow-sm d-flex align-items-center gap-2 transition-all" 
+        <button id="toggleBtn" class="btn btn-primary shadow-sm d-flex align-items-center gap-2 transition-all" 
                 onclick="toggleSidebar()" 
                 type="button"
                 style="z-index: 1050; border-radius: 0;">
@@ -12,7 +12,7 @@
             <span id="btn-text">Filteri i Kategorije</span>
         </button>
         @else
-        <button id="toggleBtn" class="btn btn-dark shadow-sm d-flex align-items-center gap-2 transition-all" 
+        <button id="toggleBtn" class="btn btn-primary shadow-sm d-flex align-items-center gap-2 transition-all" 
                 onclick="toggleSidebar()" 
                 type="button"
                 style="z-index: 1050; border-radius: 0;">
@@ -29,7 +29,6 @@
                         <input type="hidden" name="category" value="{{ request('category') }}">
                     @endif
 
-                    {{-- Dinamičke kategorije --}}
                     @if(Route::currentRouteName() != 'shop.prebuilts' && count($categories) > 0)
                     <div class="card border-0 shadow-sm mb-3 rounded-0">
                         <div class="card-header bg-white border-0 py-3" style="cursor: pointer;" data-bs-toggle="collapse" data-bs-target="#catCollapse">
@@ -54,7 +53,6 @@
                     </div>
                     @endif
 
-                    {{-- Dinamički Spec Filteri (Top 4 atributa) --}}
                     @if(isset($allSpecs) && count($allSpecs) > 0)
                         @foreach($allSpecs as $specName => $values)
                         <div class="card border-0 shadow-sm mb-2 rounded-0">
@@ -88,7 +86,6 @@
                         @endforeach
                     @endif
 
-                
                     <div class="card border-0 shadow-sm mb-3 rounded-0 p-3">
                         <h6 class="fw-bold text-uppercase mb-3" style="font-size: 0.75rem;">Cena (€)</h6>
                         
@@ -120,7 +117,7 @@
                     </div>
 
                     <div class="d-grid gap-2 mt-3">
-                        <a href="{{ URL::current() }}" class="btn btn-light btn-sm rounded-0 border text-uppercase fw-bold shadow-sm">Poništi sve</a>
+                        <a href="{{ URL::current() }}" class="btn btn-outline-danger btn-sm rounded-0 text-uppercase fw-bold shadow-sm">Poništi sve</a>
                     </div>
                 </form>
             </div>
@@ -151,7 +148,7 @@
                                 @elseif($hasDiscount)
                                     <span class="badge bg-danger rounded-0 px-2 py-1 fw-bold shadow-sm">-{{ $percentage }}%</span>
                                 @else
-                                    <span class="badge bg-dark rounded-0 px-2 py-1 fw-bold shadow-sm">NOVO</span>
+                                    <span class="badge bg-primary rounded-0 px-2 py-1 fw-bold shadow-sm">NOVO</span>
                                 @endif
                             </div>
 
@@ -193,11 +190,11 @@
                                     </div>
 
                                     <div class="d-grid gap-2">
-                                        <a href="{{ route('product.show', $product->slug) }}" class="btn btn-outline-dark rounded-0 fw-bold btn-sm">DETALJI</a>
+                                        <a href="{{ route('product.show', $product->slug) }}" class="btn btn-outline-primary rounded-0 fw-bold btn-sm">DETALJI</a>
                                         @if(!$isOutOfStock)
                                             <form action="{{ route('cart.add', $product->id) }}" method="POST">
                                                 @csrf
-                                                <button type="submit" class="btn btn-dark rounded-0 w-100 fw-bold btn-sm">
+                                                <button type="submit" class="btn btn-primary rounded-0 w-100 fw-bold btn-sm">
                                                     <i class="bi bi-cart3"></i> U KORPU
                                                 </button>
                                             </form>
@@ -235,14 +232,14 @@ function toggleSidebar() {
         content.classList.replace('col-lg-12', 'col-lg-9');
         productsGrid.classList.remove('full-width-grid');
         btnText.classList.remove('d-none');
-        toggleBtn.classList.replace('btn-outline-dark', 'btn-dark');
+        toggleBtn.classList.replace('btn-outline-primary', 'btn-primary');
         toggleBtn.style.padding = "0.375rem 0.75rem";
     } else {
         sidebar.classList.add('d-none');
         content.classList.replace('col-lg-9', 'col-lg-12');
         productsGrid.classList.add('full-width-grid');
         btnText.classList.add('d-none');
-        toggleBtn.classList.replace('btn-dark', 'btn-outline-dark');
+        toggleBtn.classList.replace('btn-primary', 'btn-outline-primary');
         toggleBtn.style.padding = "0.375rem 0.5rem";
     }
 }

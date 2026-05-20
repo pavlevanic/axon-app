@@ -99,12 +99,12 @@ h1, h2, h3, .fw-bold {
 
 .carousel.vertical .carousel-item-next:not(.carousel-item-start),
 .carousel.vertical .active.carousel-item-end {
-    transform: translateY(100%); /* Dolazi odozdo */
+    transform: translateY(100%); 
 }
 
 .carousel.vertical .carousel-item-prev:not(.carousel-item-end),
 .carousel.vertical .active.carousel-item-start {
-    transform: translateY(-100%); /* Odazi nagore */
+    transform: translateY(-100%); 
 }
 
 .carousel.vertical .active.carousel-item-next.carousel-item-start,
@@ -112,7 +112,6 @@ h1, h2, h3, .fw-bold {
     transform: translateY(0);
 }
 
-/* Podešavanje ikonica da prate vertikalni smer */
 #newsTicker .carousel-control-prev,
 #newsTicker .carousel-control-next {
     width: 40px;
@@ -125,10 +124,10 @@ h1, h2, h3, .fw-bold {
     opacity: 1;
 }
 .custom-ticker-text {
-    font-size: 16px !important; /* Povećaj na 20px ako želiš još krupnije */
-    font-weight: 600 !important; /* Podebljava slova za bolju čitljivost */
-    letter-spacing: 0.5px; /* Blagi razmak između slova za "premium" izgled */
-    color: #000000 !important; /* Potpuno crna boja radi kontrasta */
+    font-size: 16px !important; 
+    font-weight: 600 !important; 
+    letter-spacing: 0.5px; 
+    color: #000000 !important; 
 }
 .btn-white {
     background-color: #ffffff;
@@ -149,5 +148,7 @@ footer a.text-secondary:hover {
 footer .bi:hover {
     color: #f1f1f1;
 }
+
+
 
 

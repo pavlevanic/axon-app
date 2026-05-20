@@ -4,6 +4,9 @@ import '../sass/app.scss';
 import * as bootstrap from 'bootstrap';
 window.bootstrap = bootstrap;
 
+// Ako učitavaš noUiSlider preko npm-a, otkomentariši liniju ispod:
+// import noUiSlider from 'nouislider'; 
+
 window.scrollToTop = function () {
     window.scrollTo({
         top: 0,
@@ -12,18 +15,26 @@ window.scrollToTop = function () {
 };
 
 document.addEventListener('DOMContentLoaded', function () {
-
     const slider = document.getElementById('price-slider');
     const minInput = document.getElementById('min_price');
     const maxInput = document.getElementById('max_price');
-    const rangeLabel = document.getElementById('price-range-label');
+    const rangeLabel = document.getElementById('price-range-label'); // Može da bude null, neće pući kod
 
-    if (slider && minInput && maxInput && rangeLabel && typeof noUiSlider !== 'undefined') {
+    // Izbacio sam rangeLabel iz uslova - slider će raditi i bez njega!
+    if (slider && minInput && maxInput) {
+        
+        // Bezbedna provera za biblioteku (bilo da je sa CDN-a ili npm-a)
+        const sliderLib = typeof noUiSlider !== 'undefined' ? noUiSlider : (window.noUiSlider || null);
+        
+        if (!sliderLib) {
+            console.error('AXON: noUiSlider biblioteka nije učitana!');
+            return;
+        }
 
         let startMin = parseInt(minInput.value) || 0;
         let startMax = parseInt(maxInput.value) || 5000;
 
-        noUiSlider.create(slider, {
+        sliderLib.create(slider, {
             start: [startMin, startMax],
             connect: true,
             step: 10,
@@ -44,8 +55,11 @@ document.addEventListener('DOMContentLoaded', function () {
             minInput.value = min;
             maxInput.value = max;
 
-            rangeLabel.innerHTML =
-                `${parseInt(min).toLocaleString('de-DE')} € - ${parseInt(max).toLocaleString('de-DE')} €`;
+            // Provera: Ažuriraj label samo ako stvarno postoji u HTML-u
+            if (rangeLabel) {
+                rangeLabel.innerHTML =
+                    `${parseInt(min).toLocaleString('de-DE')} € - ${parseInt(max).toLocaleString('de-DE')} €`;
+            }
         });
 
         slider.noUiSlider.on('change', function () {
@@ -53,7 +67,6 @@ document.addEventListener('DOMContentLoaded', function () {
             if (form) form.submit();
         });
     }
-
 });
 
 import { initEditor } from './ckeditor';

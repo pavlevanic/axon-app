@@ -54,7 +54,7 @@
 
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-dark btn-lg rounded-0 py-3 fw-bold shadow-sm">
-                                {{ __('LOGIN') }}
+                                {{ __('Prijavi se') }}
                             </button>
 
                             @if (Route::has('password.request'))

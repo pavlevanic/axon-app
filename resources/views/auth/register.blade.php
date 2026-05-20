@@ -71,7 +71,7 @@
 
                         <div class="d-grid mt-3">
                             <button type="submit" class="btn btn-dark btn-lg rounded-0 py-3 fw-bold shadow-sm">
-                                {{ __('REGISTER') }}
+                                {{ __('Registruj Se') }}
                             </button>
                         </div>
                     </form>

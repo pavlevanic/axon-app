@@ -62,7 +62,7 @@
             @yield('content')
 
             <footer class="bg-dark text-white pt-0 border-top border-secondary">
-                <button onclick="scrollToTop()" class="btn btn-light w-100 rounded-0 py-3 fw-bold text-uppercase border-0" style="letter-spacing: 2px; font-size: 0.8rem;">
+                <button onclick="scrollToTop()" class="btn btn-primary w-100 rounded-0 py-3 fw-bold text-uppercase border-0" style="letter-spacing: 2px; font-size: 0.8rem;">
                     <i class="bi bi-arrow-up me-2"></i> Povratak na vrh
                 </button>
             
@@ -72,9 +72,9 @@
                             <h4 class="fw-bold mb-3" style="letter-spacing: 2px;">AXON</h4>
                             <p class="text-secondary small">Vrhunske PC konfiguracije i komponente za entuzijaste. Snaga i preciznost u svakom bitu.</p>
                             <div class="d-flex justify-content-center justify-content-md-start gap-3 mt-3">
-                                <a href="#" class="text-white fs-5"><i class="bi bi-instagram"></i></a>
-                                <a href="#" class="text-white fs-5"><i class="bi bi-facebook"></i></a>
-                                <a href="#" class="text-white fs-5"><i class="bi bi-twitter-x"></i></a>
+                                <a href="#" class="text-primary fs-5"><i class="bi bi-instagram"></i></a>
+                                <a href="#" class="text-primary fs-5"><i class="bi bi-facebook"></i></a>
+                                <a href="#" class="text-primary fs-5"><i class="bi bi-twitter-x"></i></a>
                             </div>
                         </div>
             

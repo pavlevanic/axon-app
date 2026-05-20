@@ -5,10 +5,10 @@
         <div id="axonHeroCarousel" class="carousel slide carousel-fade p-0 m-0" data-bs-ride="carousel">
     
             
-            <div class="carousel-indicators mb-4">
+            <div class="carousel-indicators  mb-4">
                 @foreach($heroNews as $key => $news)
                     <button type="button" data-bs-target="#axonHeroCarousel" data-bs-slide-to="{{ $key }}" 
-                        class="{{ $key == 0 ? 'active' : '' }}" 
+                        class="btn-primary {{ $key == 0 ? 'active' : '' }}" 
                         style="width: 50px; height: 5px;"> 
                     </button>
                 @endforeach
@@ -36,7 +36,7 @@
                                             <p class="lead fs-4 mb-4" style="max-width: 600px; opacity: 0.9;">
                                                 {{ $news->summary }}
                                             </p>
-                                            <a href="{{ route('news.show', $news->slug) }}" class="btn btn-light text-black btn-lg px-5 py-3 rounded-4 fw-bold shadow">
+                                            <a href="{{ route('news.show', $news->slug) }}" class="btn btn-primary text-white btn-lg px-5 py-3 rounded-4 fw-bold shadow">
                                                 PROČITAJ VIŠE
                                             </a>
                                         </div>
@@ -52,10 +52,10 @@
         <div class="container py-5 ">
             <div class="d-flex justify-content-between align-items-end mb-4">
                 <div>
-                    <h6 class="text-danger fw-bold text-uppercase mb-1">Premium Ponuda</h6>
+                    <h6 class="text-primary fw-bold text-uppercase mb-1">Premium Ponuda</h6>
                     <h2 class="fw-bold display-5">Izdvajamo za vas</h2>
                 </div>
-                <a href="{{route('shop.prebuilts')}}" class="btn btn-outline-dark rounded-0 px-4 fw-bold">POGLEDAJ SVE</a>
+                <a href="{{route('shop.prebuilts')}}" class="btn btn-outline-primary rounded-0 px-4 fw-bold">POGLEDAJ SVE</a>
             </div>
         
             <div class="row g-4">
@@ -70,30 +70,32 @@
                 <div class="col-6 col-md-4 col-lg-3">
                     @php $isOutOfStock = $product->stock <= 0; @endphp
                     
-                    <div class="card h-100 border-0 shadow-sm product-card transition {{ $isOutOfStock ? 'opacity-75' : '' }}">
+                    <div class="card h-100 border-0 shadow-sm product-card transition ">
                         
                         
                         <div class="position-absolute top-0 start-0 m-3" style="z-index: 2;">
                             @if($isOutOfStock)
-                                <span class="badge bg-secondary rounded-0 px-3 py-2 fw-bold shadow-sm">
+                                <span class="badge bg-primary rounded-0 px-3 py-2 fw-bold shadow-sm" style="opacity: 70%">
                                     RASPRODATO
                                 </span>
                             @elseif($hasDiscount)
-                                <span class="badge bg-danger rounded-0 px-3 py-2 fw-bold shadow-sm">
+                                <span class="badge bg-primary rounded-0 px-3 py-2 fw-bold shadow-sm">
                                     -{{ $percentage }}%
                                 </span>
                             @else
-                                <span class="badge bg-dark rounded-0 px-3 py-2 fw-bold shadow-sm">
+                                <span class="badge bg-primary rounded-0 px-3 py-2 fw-bold shadow-sm">
                                     NOVO
                                 </span>
                             @endif
                         </div>
                 
                         <div class="p-3 text-center bg-light position-relative">
+                            <a href="{{ route('product.show', $product->slug) }}">
                             <img src="{{ asset($product->image) }}" 
                                  class="img-fluid {{ $isOutOfStock ? 'grayscale-filter' : '' }}" 
                                  style="height: 200px; object-fit: contain;" 
                                  alt="{{ $product->name }}">
+                            </a>
                         </div>
                 
                         <div class="card-body d-flex flex-column">
@@ -120,18 +122,18 @@
                                 
                                 {{-- Akcije --}}
                                 <div class="d-grid gap-2 mt-3">
-                                    <a href="{{ route('product.show', $product->slug) }}" class="btn btn-dark rounded-0 fw-bold">DETALJI</a>
+                                    <a href="{{ route('product.show', $product->slug) }}" class="btn btn-primary rounded-0 fw-bold">DETALJI</a>
                                     
                                     
                                     @if(!$isOutOfStock)
                                         <form action="{{ route('cart.add', $product->id) }}" method="POST">
                                             @csrf
-                                            <button type="submit" class="btn btn-outline-dark rounded-0 w-100 fw-bold">
+                                            <button type="submit" class="btn btn-outline-primary rounded-0 w-100 fw-bold">
                                                 <i class="bi bi-cart3"></i> U KORPU
                                             </button>
                                         </form>
                                     @else
-                                        <button type="button" class="btn btn-outline-secondary rounded-0 w-100 fw-bold" disabled>
+                                        <button type="button" class="btn btn-outline-primary rounded-0 w-100 fw-bold" disabled>
                                             NEMA NA STANJU
                                         </button>
                                     @endif
@@ -208,7 +210,7 @@
                 <div class="row g-4">
                     <div class="d-flex justify-content-between align-items-end mb-4">
                         <div>
-                            <h6 class="text-danger fw-bold text-uppercase mb-1">naša obećanja</h6>
+                            <h6 class="text-primary  fw-bold text-uppercase mb-1">naša obećanja</h6>
                             <h2 class="fw-bold display-5">Zasto da izaberete bas nas?</h2>
                         </div>
                         
@@ -219,7 +221,7 @@
                         <div class="card h-100 border-0 shadow-sm feature-card p-3">
                             <div class="card-body">
                                 <div class="feature-icon-wrapper mb-4">
-                                    <i class="bi bi-speedometer2 text-dark fs-3"></i>
+                                    <i class="bi bi-speedometer2 text-primary fs-3"></i>
                                 </div>
                                 <h5 class="fw-bold text-uppercase mb-3" style="letter-spacing: 1px; font-size: 1rem;">Performanse na prvom mestu</h5>
                                 <p class="text-secondary small">Svaki deo i PC je dizajniran za optimalan protok vazduha i stabilnost — čuvajući tvoj sistem hladnim, tihim i pouzdanim.</p>
@@ -232,7 +234,7 @@
                         <div class="card h-100 border-0 shadow-sm feature-card p-3">
                             <div class="card-body">
                                 <div class="feature-icon-wrapper mb-4">
-                                    <i class="bi bi-globe text-dark fs-3"></i>
+                                    <i class="bi bi-globe text-primary fs-3"></i>
                                 </div>
                                 <h5 class="fw-bold text-uppercase mb-3" style="letter-spacing: 1px; font-size: 1rem;">Univerzalni izgled</h5>
                                 <p class="text-secondary small">Dizajnirani da izgledaju dobro bilo gde i da odgovaraju svakome — čisti, vanvremenski i nikada pretrpani.</p>
@@ -245,7 +247,7 @@
                         <div class="card h-100 border-0 shadow-sm feature-card p-3">
                             <div class="card-body">
                                 <div class="feature-icon-wrapper mb-4">
-                                    <i class="bi bi-award text-dark fs-3"></i>
+                                    <i class="bi bi-award text-primary fs-3"></i>
                                 </div>
                                 <h5 class="fw-bold text-uppercase mb-3" style="letter-spacing: 1px; font-size: 1rem;">Napravljeno da traje</h5>
                                 <p class="text-secondary small">Kvalitetni materijali i rigorozno testiranje svakog proizvoda, kako bi izdržao godine intenzivnog korišćenja.</p>
@@ -258,7 +260,7 @@
                         <div class="card h-100 border-0 shadow-sm feature-card p-3">
                             <div class="card-body">
                                 <div class="feature-icon-wrapper mb-4">
-                                    <i class="bi bi-shield-check text-dark fs-3"></i>
+                                    <i class="bi bi-shield-check text-primary fs-3"></i>
                                 </div>
                                 <h5 class="fw-bold text-uppercase mb-3" style="letter-spacing: 1px; font-size: 1rem;">Bez briga</h5>
                                 <p class="text-secondary small">Pouzdana garancija i podrška našeg tima gamera — igraj sa potpunim samopouzdanjem.</p>
@@ -279,7 +281,7 @@
                         <h2 class="fw-bold mb-3" style="letter-spacing: 1px; font-size: 2.5rem;">
                             Prijavite se na naš newsletter</h2>
                         
-                        <p class="text-secondary mb-4" style="font-size: 1rem;">
+                        <p class="text-white mb-4" style="font-size: 1rem;">
                             Ne propustite naše najveće popuste i akcije.
                         </p>
         
@@ -288,12 +290,12 @@
                                 <div class="flex-grow-1 " style="max-width: 400px;">
                                     <input type="email" 
                                            name="email" 
-                                           class="form-control newsletter-input text-white py-3 px-4" 
+                                           class="form-control newsletter-input text-primary fw-bold py-3 px-4" 
                                            placeholder="E-mail"
-                                           style="border: 1px solid #444; border-radius: 8px;">
+                                           style="border: 1px solid $primary; border-radius: 8px;">
                                 </div>
                                 <div>
-                                    <button type="submit" class="btn btn-white newsletter-btn py-3 px-5 fw-bold text-uppercase">
+                                    <button type="submit" class="btn btn-primary newsletter-btn py-3 px-5 fw-bold text-uppercase">
                                         Prijavi se
                                     </button>
                                 </div>
