@@ -4,13 +4,12 @@
 <div class="card border-0 shadow-sm">
     <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
         <h5 class="fw-bold mb-0"><i class="bi bi-box-seam me-2 text-dark"></i>Svi Proizvodi</h5>
-        <a href="{{ route('product.create') }}" class="btn btn-dark btn-sm px-3">
+        <a href="{{ route('product.create') }}" class="btn btn-primary btn-sm px-3">
             <i class="bi bi-plus-lg me-1"></i> Dodaj novi proizvod
         </a>
     </div>
 
     <div class="card-body">
-        {{-- Prikaz statusnih poruka --}}
         @if (session('status'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 {{ session('status') }}
@@ -74,14 +73,14 @@
                             </td>
                             <td>
                                 <div class="d-flex justify-content-center gap-2">
-                                    <a href="{{ route('product.edit', $product->id) }}" class="btn btn-outline-dark btn-sm" title="Izmeni">
+                                    <a href="{{ route('product.edit', $product->id) }}" class="btn btn-outline-primary btn-sm" title="Izmeni">
                                         <i class="bi bi-pencil"></i>
                                     </a>
                                     
                                     <form action="{{ route('product.destroy', $product->id) }}" method="POST" onsubmit="return confirm('Da li ste sigurni da želite da obrišete ovaj proizvod?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-outline-dark btn-sm" title="Obriši">
+                                        <button type="submit" class="btn btn-danger btn-sm" title="Obriši">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </form>

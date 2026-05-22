@@ -20,16 +20,16 @@
                         <div class="card-body">
                             <h5 class="fw-bold mb-3">Admin Meni</h5>
                             <div class="list-group list-group-flush">
-                                <a href="{{ route('admin.index') }}" class="list-group-item list-group-item-action {{ Request::is('admin') ? 'bg-dark text-white' : '' }}">
+                                <a href="{{ route('admin.index') }}" class="list-group-item list-group-item-action {{ Request::is('admin') ? 'bg-primary text-white' : '' }}">
                                   Dashboard
                                 </a>
-                                <a href="{{ route('product.index') }}" class="list-group-item list-group-item-action {{ Request::is('product*') ? 'bg-dark text-white' : '' }}">
+                                <a href="{{ route('product.index') }}" class="list-group-item list-group-item-action {{ Request::is('product*') ? 'bg-primary text-white' : '' }}">
                                   Upravljaj Proizvodima
                                 </a>
-                                <a href="{{ route('category.index') }}" class="list-group-item list-group-item-action {{ Request::is('category*') ? 'bg-dark text-white' : '' }}">
+                                <a href="{{ route('category.index') }}" class="list-group-item list-group-item-action {{ Request::is('category*') ? 'bg-primary text-white' : '' }}">
                                   Kategorije
                                 </a>
-                                <a href="{{ route('news.index') }}" class="list-group-item list-group-item-action {{ Route::is('news*') ? 'bg-dark text-white' : '' }}">
+                                <a href="{{ route('news.index') }}" class="list-group-item list-group-item-action {{ Route::is('news*') ? 'bg-primary text-white' : '' }}">
                                    Vesti
                                 </a>
                             </div>

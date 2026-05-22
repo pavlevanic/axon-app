@@ -4,7 +4,7 @@
 <div class="card border-0 shadow-sm">
     <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
         <h5 class="fw-bold mb-0"><i class="bi bi-tags me-2"></i>Upravljanje Kategorijama</h5>
-        <a href="{{ route('category.create') }}" class="btn btn-dark btn-sm px-3">
+        <a href="{{ route('category.create') }}" class="btn btn-primary btn-sm px-3">
             <i class="bi bi-plus-lg me-1"></i> Dodaj novu
         </a>
     </div>
@@ -62,14 +62,14 @@
                             </td>
                             <td>
                                 <div class="d-flex justify-content-center gap-2">
-                                    <a href="{{ route('category.edit', $category) }}" class="btn btn-outline-dark btn-sm" title="Izmeni">
+                                    <a href="{{ route('category.edit', $category) }}" class="btn btn-outline-primary btn-sm" title="Izmeni">
                                         <i class="bi bi-pencil"></i>
                                     </a>
                                     
                                     <form action="{{ route('category.destroy', $category) }}" method="POST" onsubmit="return confirm('Da li ste sigurni da želite da obrišete ovu kategoriju?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-outline-dark btn-sm" title="Obriši">
+                                        <button type="submit" class="btn btn-danger btn-sm" title="Obriši">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </form>

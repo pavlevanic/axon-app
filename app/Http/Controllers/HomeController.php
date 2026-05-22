@@ -18,7 +18,7 @@ class HomeController extends Controller
                     ->latest()
                     ->get();
         $products = Product::where('is_featured', 1)->take(8)->get();
-        $categories = Category::all();
+        $categories = Category::where('id', '!=', 1)->take(4)->get();
 
         return view('welcome', compact('heroNews','products','categories'));
     }

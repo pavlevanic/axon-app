@@ -1,22 +1,14 @@
 // --- Fonts ---
-@import url('https://fonts.bunny.net/css?family=Nunito');
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-// --- Variables & Configuration ---
+
 @import 'variables';
 
-$my-custom-dark: #121212;
-$dark: $my-custom-dark;
 
-$my-custom-primary:rgb(124, 58, 237);
-$primary:$my-custom-primary;
-
-
-// --- Frameworks & Icons ---
 @import 'bootstrap/scss/bootstrap';
 @import 'bootstrap-icons/font/bootstrap-icons.css';
 
-// --- Base Styles ---
 body {
     font-family: 'Inter', sans-serif !important;
     letter-spacing: -0.02rem;
@@ -352,3 +344,23 @@ footer {
     font-size: 14px;
     font-style: italic;
 }
+
+
+.hover-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.hover-lift:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.12) !important; }
+.ls-wide { letter-spacing: 0.15em; }
+
+.hero-arrow {
+    width: 46px;
+    height: 46px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 1;
+}
+.hero-arrow:hover {
+    background: rgba(0, 0, 0, 0.75);
+}
+.carousel-control-prev.hero-arrow { left: 5.5%; }
+.carousel-control-next.hero-arrow { right: 5.5%; }

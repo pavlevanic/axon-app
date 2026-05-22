@@ -101,7 +101,7 @@
   
         <div class="modal-footer">
           <button class="btn btn-outline-danger" data-bs-dismiss="modal">Nazad</button>
-          <button class="btn btn-dark" onclick="applySource()">Potvrdi</button>
+          <button class="btn btn-primary" onclick="applySource()">Potvrdi</button>
         </div>
   
       </div>

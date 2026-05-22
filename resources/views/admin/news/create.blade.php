@@ -49,7 +49,7 @@
                             <div id="editor" style="min-height: 300px;"></div>
                             <textarea name="content" id="content" style="display: none;"></textarea>
                             <div class="text-center">
-                                <button type="button" class="btn btn-dark mb-2 text-center mt-1" onclick="openSourceEditor()">
+                                <button type="button" class="btn btn-outline-dark mb-2 text-center mt-1" onclick="openSourceEditor()">
                                     <>Source
                                 </button>
                             </div>
@@ -86,7 +86,7 @@
   
         <div class="modal-footer">
           <button class="btn btn-outline-danger" data-bs-dismiss="modal">Nazad</button>
-          <button class="btn btn-dark" onclick="applySource()">Potvrdi</button>
+          <button class="btn btn-primary" onclick="applySource()">Potvrdi</button>
         </div>
   
       </div>

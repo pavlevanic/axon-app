@@ -80,7 +80,7 @@
                 </div>
             </div>
             
-            <a href="{{ route('home') }}" class="btn btn-outline-dark rounded-pill px-4">
+            <a href="{{ route('home') }}" class="btn btn-outline-primary rounded-pill px-4">
                 <i class="bi bi-arrow-left me-2"></i>Nastavi kupovinu
             </a>
         </div>
@@ -99,7 +99,7 @@
                         <span class="h5 fw-bold text-primary">{{ number_format($grandTotal, 2) }} €</span>
                     </div>
                     
-                    <button class="btn btn-dark btn-lg w-100 rounded-pill shadow-sm py-3">
+                    <button class="btn btn-primary btn-lg w-100 rounded-pill shadow-sm py-3">
                         Idi na plaćanje <i class="bi bi-credit-card ms-2"></i>
                     </button>
                 </div>
@@ -115,7 +115,7 @@
         <i class="bi bi-bag-x display-1 text-muted"></i>
         <h4 class="mt-4">Vaša korpa je trenutno prazna</h4>
         <p class="text-muted">Dodajte neke proizvode u korpu da biste ih videli ovde.</p>
-        <a href="{{ route('home') }}" class="btn btn-dark btn-lg rounded-pill px-5 mt-3 shadow">Započni kupovinu</a>
+        <a href="{{ route('shop.components') }}" class="btn btn-primary btn-lg rounded-pill px-5 mt-3 shadow">Započni kupovinu</a>
     </div>
     @endif
 </div>

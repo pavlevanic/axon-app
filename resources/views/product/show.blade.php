@@ -64,9 +64,9 @@
 
             <div class="mb-4">
                 @if($product->stock > 0)
-                    <span class="badge bg-dark px-4 py-2">Na stanju ({{ $product->stock }} kom)</span>
+                    <span class="badge bg-success fs-5 px-5 py-2">Na stanju</span>
                 @else
-                    <span class="badge bg-dark px-4 py-2">Trenutno nedostupno</span>
+                    <span class="badge bg-danger fs-5 px-4 py-2">Trenutno nedostupno</span>
                 @endif
             </div>
 
@@ -110,7 +110,7 @@
             <form action="{{ route('cart.add', $product->id) }}" method="POST" class="mt-4">
                 @csrf
                 @if($product->stock > 0)
-                   <button type="submit" class="btn btn-dark btn-lg w-100 rounded-pill shadow-sm py-3 mb-3">
+                   <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill shadow-sm py-3 mb-3">
                     <i class="bi bi-cart-plus me-2"></i> Dodaj u korpu
                 </button>
                 @else
@@ -124,7 +124,7 @@
                     <i class="bi bi-gear-fill me-1"></i> Admin opcije:
                 </h6>
                 <div class="d-flex gap-2">
-                    <a href="{{ route('product.edit', $product->id) }}" class="btn btn-dark btn-sm rounded-0  text-uppercase" style="font-size: 0.75rem;">Izmeni proizvod</a>
+                    <a href="{{ route('product.edit', $product->id) }}" class="btn btn-primary btn-sm rounded-0  text-uppercase" style="font-size: 0.75rem;">Izmeni proizvod</a>
                     <form action="{{ route('product.destroy', $product->id) }}" method="POST" onsubmit="return confirm('Da li ste sigurni?')">
                         @csrf
                         @method('DELETE')
@@ -139,8 +139,8 @@
     <div class="row mt-5">
         <div class="col-12">
             <h4 class="fw-bold border-bottom pb-2 mb-3">Opis proizvoda</h4>
-            <div class="product-description lead text-secondary">
-                {!! nl2br(e($product->desc)) !!}
+            <div class="product-description  text-secondary fs-5 lh-lg">
+                {!! $product->desc !!}
             </div>
         </div>
     </div>

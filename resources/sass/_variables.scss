@@ -1,7 +1,11 @@
 // Body
 $body-bg: #f8fafc;
 
-// Typography
-$font-family-sans-serif: 'Nunito', sans-serif;
 $font-size-base: 0.9rem;
 $line-height-base: 1.6;
+
+$my-custom-dark: #121212;
+$dark: $my-custom-dark;
+
+$my-custom-primary:rgb(124, 58, 237);
+$primary:$my-custom-primary;

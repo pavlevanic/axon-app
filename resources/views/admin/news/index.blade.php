@@ -7,7 +7,7 @@
             <h2 class="fw-bold text-dark m-0">Upravljanje vestima</h2>
             <p class="text-muted">Pregled svih objavljenih vesti na AXON portalu</p>
         </div>
-        <a href="{{ route('news.create') }}" class="btn btn-dark text-white btn-lg rounded-0 px-4">
+        <a href="{{ route('news.create') }}" class="btn btn-primary text-white btn-sm rounded-0 px-4">
             <i class="bi bi-plus-lg"></i> Nova Vest
         </a>
     </div>
@@ -53,16 +53,16 @@
                                 <td>{{ $item->created_at->format('d.m.Y.') }}</td>
                                 <td class="text-end pe-4">
                                     <div class="btn-group">
-                                        <a href="{{ route('news.show', $item->slug) }}" class="btn btn-outline-dark btn-sm">
+                                        <a href="{{ route('news.show', $item->slug) }}" class="btn btn-primary btn-sm">
                                             <i class="bi bi-eye"></i>
                                         </a>
-                                        <a href="{{ route('news.edit', $item->id) }}" class="btn btn-outline-primary btn-sm">
+                                        <a href="{{ route('news.edit', $item->id) }}" class="btn btn-outline-success btn-sm">
                                             <i class="bi bi-pencil"></i>
                                         </a>
                                         <form action="{{ route('news.destroy', $item->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Da li ste sigurni?')">
                                             @csrf
                                             @method('DELETE')
-                                            <button class="btn btn-outline-danger btn-sm">
+                                            <button class="btn btn-danger btn-sm rounded-0">
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </form>

@@ -41,6 +41,11 @@
                         <div class="mb-3">
                             <label class="form-label fw-bold">Detaljan opis</label>
                             <textarea name="desc" id="editor" class="form-control" rows="5">{{ old('desc', $product->desc) }}</textarea>
+                            <div class="text-center">
+                                <button type="button" class="btn btn-outline-dark mb-2 text-center mt-1" onclick="openSourceEditor()">
+                                    <>Source
+                                </button>
+                            </div>
                         </div>
                     </div>
 
@@ -189,6 +194,56 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="sourceModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+  
+        <div class="modal-header">
+          <h5 class="modal-title">HTML Source Editor</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+  
+        <div class="modal-body">
+          <textarea id="htmlSource" style="width:100%;height:500px;font-family:monospace;"></textarea>
+        </div>
+  
+        <div class="modal-footer">
+          <button class="btn btn-outline-danger" data-bs-dismiss="modal">Nazad</button>
+          <button class="btn btn-primary" onclick="applySource()">Potvrdi</button>
+        </div>
+  
+      </div>
+    </div>
+  </div>
+  <script>
+    let sourceModal;
+
+document.addEventListener('DOMContentLoaded', function () {
+    sourceModal = new bootstrap.Modal(document.getElementById('sourceModal'));
+});
+
+function openSourceEditor() {
+    const html = window.editor.getData();
+
+    document.getElementById('htmlSource').value = html;
+
+    sourceModal.show();
+}
+
+function applySource() {
+    const html = document.getElementById('htmlSource').value;
+
+    window.editor.setData(html);
+
+    sourceModal.hide();
+}
+  </script>
+<script>
+    document.getElementById('newsForm').addEventListener('submit', function () {
+    document.getElementById('content').value = window.editor.getData();
+});
+</script>
 
 <script>
     

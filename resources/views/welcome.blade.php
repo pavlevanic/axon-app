@@ -3,40 +3,30 @@
 @section('content')
     <div>
         <div id="axonHeroCarousel" class="carousel slide carousel-fade p-0 m-0" data-bs-ride="carousel">
-    
-            
-            <div class="carousel-indicators  mb-4">
-                @foreach($heroNews as $key => $news)
-                    <button type="button" data-bs-target="#axonHeroCarousel" data-bs-slide-to="{{ $key }}" 
-                        class="btn-primary {{ $key == 0 ? 'active' : '' }}" 
-                        style="width: 50px; height: 5px;"> 
-                    </button>
-                @endforeach
-            </div>
-        
+
             <div class="carousel-inner mt-4">
                 @if($heroNews->count() > 0)
                     @foreach($heroNews as $key => $news)
                         <div class="carousel-item {{ $key == 0 ? 'active' : '' }}" data-bs-interval="5000">
                             <div style="
-                                background: linear-gradient(rgba(0, 0, 0, 0.5),rgba(15, 15, 15, 0.6)),
-                                url('{{ asset($news->image) }}') center/cover no-repeat;
-                                height: 70vh; 
+                                background: url('{{ asset($news->image) }}') center/cover no-repeat;
+                                height: 63.5vh;
                                 width: 90%;
                                 display: flex;
                                 margin-left: auto;
                                 margin-right: auto;
-                                border-radius:15px;
+                                border-radius: 15px;
                             " class="d-flex align-items-center">
-                                
+        
                                 <div class="container p-5">
                                     <div class="row">
-                                        <div class="col-lg-8 text-white">
+                                        <div class="col-lg-8 {{ $news->dark_image ? 'text-white' : 'text-dark' }}">
                                             <h1 class="display-2 fw-bold mb-3">{{ $news->title }}</h1>
                                             <p class="lead fs-4 mb-4" style="max-width: 600px; opacity: 0.9;">
                                                 {{ $news->summary }}
                                             </p>
-                                            <a href="{{ route('news.show', $news->slug) }}" class="btn btn-primary text-white btn-lg px-5 py-3 rounded-4 fw-bold shadow">
+                                            <a href="{{ route('news.show', $news->slug) }}" 
+                                               class="btn {{ $news->dark_image ? 'btn-light text-black' : 'btn-primary text-white' }} btn-lg px-5 py-3 rounded-4 fw-bold shadow">
                                                 PROČITAJ VIŠE
                                             </a>
                                         </div>
@@ -47,6 +37,13 @@
                     @endforeach
                 @endif
             </div>
+        
+            <button class="carousel-control-prev hero-arrow" type="button" data-bs-target="#axonHeroCarousel" data-bs-slide="prev">
+                <i class="bi bi-chevron-left text-white fs-4"></i>
+            </button>
+            <button class="carousel-control-next hero-arrow" type="button" data-bs-target="#axonHeroCarousel" data-bs-slide="next">
+                <i class="bi bi-chevron-right text-white fs-4"></i>
+            </button>
         </div>
 
         <div class="container py-5 ">
@@ -133,9 +130,7 @@
                                             </button>
                                         </form>
                                     @else
-                                        <button type="button" class="btn btn-outline-primary rounded-0 w-100 fw-bold" disabled>
-                                            NEMA NA STANJU
-                                        </button>
+                                        
                                     @endif
                                 </div>
                             </div>
@@ -168,38 +163,32 @@
         
                 <div class="row g-4">
                     @foreach($categories as $category)
-                        <div class="col-6 col-md-4 col-lg-3">
-                            @if($category->slug == 'prebuilt-pc')
-                                <a href="{{ route('shop.prebuilts') }}" class="text-decoration-none group">
-                                @else
-                                 <a href="{{ route('shop.components', ['category' => $category->slug]) }}" class="text-decoration-none group">
-                                @endif
-                                <div class="card h-100 border-0 shadow-sm transition-all hover-lift">
-                                    <div class="position-relative overflow-hidden">
-                                        @if($category->image)
-                                            <img src="{{ asset('storage/' . $category->image) }}" 
-                                                 class="card-img-top img-fluid" 
-                                                 alt="{{ $category->name }}"
-                                                 style="height: 200px; object-fit: contain;">
-                                        @else
-                                            <div class="bg-secondary d-flex align-items-center justify-content-center text-white" style="height: 200px;">
-                                                <i class="bi bi-image display-4"></i>
-                                            </div>
-                                        @endif
-                                        
-                                       
-                                        <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-0 transition-opacity group-hover-opacity-25"></div>
-                                    </div>
-                                    
-                                    <div class="card-body text-center py-3">
-                                        <h5 class="card-title mb-1 text-dark fw-bold">{{ $category->name }}</h5>
-                                        <p class="card-text text-muted small mb-0">
-                                            {{ Str::limit(strip_tags($category->desc), 40) }}
-                                        </p>
-                                    </div>
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <a href="{{ route('shop.components', ['category' => $category->slug]) }}" class="text-decoration-none">
+                            <div class="card h-100 border-0 shadow-sm hover-lift">
+                                <div class="position-relative overflow-hidden">
+                                    @if($category->image)
+                                        <img src="{{ asset('storage/' . $category->image) }}"
+                                             class="card-img-top img-fluid"
+                                             alt="{{ $category->name }}"
+                                             style="height: 200px; object-fit: contain;">
+                                    @else
+                                        <div class="bg-light d-flex align-items-center justify-content-center text-muted" style="height: 200px;">
+                                            <i class="bi bi-image display-4"></i>
+                                        </div>
+                                    @endif
                                 </div>
-                            </a>
-                        </div>
+                                <div class="card-body text-center py-3">
+                                    <h5 class="card-title mb-1 text-dark fw-bold">{{ $category->name }}</h5>
+                                    @if($category->desc)
+                                    <p class="card-text text-muted small mb-0">
+                                        {{ Str::limit(strip_tags($category->desc), 40) }}
+                                    </p>
+                                    @endif
+                                </div>
+                            </div>
+                        </a>
+                    </div>
                     @endforeach
                 </div>
             </div>
@@ -306,4 +295,6 @@
             </div>
         </section>
     </div>
+    
+    
 @endsection
