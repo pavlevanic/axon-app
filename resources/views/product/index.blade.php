@@ -21,12 +21,28 @@
             <table class="table table-hover align-middle">
                 <thead class="table-light">
                     <tr>
-                        <th style="width: 50px;">ID</th>
+                        <th style="width: 50px;">
+                            <a href="{{ route('product.index', ['sort' => 'id', 'direction' => $sort === 'id' && $direction === 'asc' ? 'desc' : 'asc']) }}" class="text-decoration-none text-dark">
+                                ID {!! $sort === 'id' ? ($direction === 'asc' ? '↑' : '↓') : '' !!}
+                            </a>
+                        </th>
                         <th>Slika</th>
-                        <th>Naziv proizvoda</th>
+                        <th>
+                            <a href="{{ route('product.index', ['sort' => 'name', 'direction' => $sort === 'name' && $direction === 'asc' ? 'desc' : 'asc']) }}" class="text-decoration-none text-dark">
+                                Naziv proizvoda {!! $sort === 'name' ? ($direction === 'asc' ? '↑' : '↓') : '' !!}
+                            </a>
+                        </th>
                         <th>Kategorija</th>
-                        <th>Cena</th>
-                        <th>Stanje</th>
+                        <th>
+                            <a href="{{ route('product.index', ['sort' => 'price', 'direction' => $sort === 'price' && $direction === 'asc' ? 'desc' : 'asc']) }}" class="text-decoration-none text-dark">
+                                Cena {!! $sort === 'price' ? ($direction === 'asc' ? '↑' : '↓') : '' !!}
+                            </a>
+                        </th>
+                        <th>
+                            <a href="{{ route('product.index', ['sort' => 'stock', 'direction' => $sort === 'stock' && $direction === 'asc' ? 'desc' : 'asc']) }}" class="text-decoration-none text-dark">
+                                Stanje {!! $sort === 'stock' ? ($direction === 'asc' ? '↑' : '↓') : '' !!}
+                            </a>
+                        </th>
                         <th class="text-center">Akcije</th>
                     </tr>
                 </thead>

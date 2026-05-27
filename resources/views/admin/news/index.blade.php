@@ -56,7 +56,7 @@
                                         <a href="{{ route('news.show', $item->slug) }}" class="btn btn-primary btn-sm">
                                             <i class="bi bi-eye"></i>
                                         </a>
-                                        <a href="{{ route('news.edit', $item->id) }}" class="btn btn-outline-success btn-sm">
+                                        <a href="{{ route('news.edit', $item->id) }}" class="btn btn-outline-primary btn-sm">
                                             <i class="bi bi-pencil"></i>
                                         </a>
                                         <form action="{{ route('news.destroy', $item->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Da li ste sigurni?')">

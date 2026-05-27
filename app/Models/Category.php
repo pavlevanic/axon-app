@@ -11,7 +11,7 @@ class Category extends Model
     /** @use HasFactory<\Database\Factories\CategoryFactory> */
 
     use HasFactory;
-    protected $fillable=['name', 'slug', 'attribute_names','desc', 'created_by', 'updated_by','attribute_groups','image'];
+    protected $fillable=['name', 'slug', 'attribute_names','desc', 'created_by', 'updated_by','attribute_groups','image','image_thumb', ];
 
     protected $casts = [
         'attribute_names' => 'array',

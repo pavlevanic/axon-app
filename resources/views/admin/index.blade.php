@@ -22,7 +22,7 @@
 
                 <!-- Kartica 2 -->
                 <div class="col-md-4">
-                    <div class="card border-0 shadow-sm bg-primary text-white">
+                    <div class="card border-0 shadow-sm bg-success text-white">
                         <div class="card-body p-4">
                             <i class="bi bi-file-earmark-post fs-1 mb-2"></i>
                             <h4>{{ $productCount }} Proizvoda</h4>
@@ -33,7 +33,7 @@
 
                 <!-- Kartica 3 -->
                 <div class="col-md-4">
-                    <div class="card border-0 shadow-sm bg-primary text-white">
+                    <div class="card border-0 shadow-sm bg-warning text-white">
                         <div class="card-body p-4">
                             <i class="bi bi-graph-up fs-1 mb-2"></i>
                             <h4>{{ $categoryCount }} Kategorija</h4>

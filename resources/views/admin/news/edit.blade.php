@@ -57,14 +57,14 @@
                             </div>
                             <textarea name="content" id="content" style="display: none;"></textarea>
                             <div class="text-center">
-                            <button type="button" class="btn btn-dark mb-2 text-center mt-1" onclick="openSourceEditor()">
-                                <>Source
-                            </button>
-                        </div>
+                                <button type="button" class="btn btn-dark mb-2 text-center mt-1" onclick="openSourceEditor()">
+                                    <>Source
+                                </button>
+                            </div>
                         </div>
 
                         {{-- Slika --}}
-                        <div class="mb-4">
+                        <div class="mb-3">
                             <label class="form-label fw-bold">Slika Vesti</label>
                             @if($news->image)
                                 <div class="mb-2">
@@ -74,6 +74,19 @@
                                 </div>
                             @endif
                             <input type="file" name="image" class="form-control">
+                        </div>
+
+                        {{-- Mobilna Slika --}}
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Slika Vesti za Mobilne Uređaje</label>
+                            @if($news->image_mobile)
+                                <div class="mb-2">
+                                    <img src="{{ asset($news->image_mobile) }}" alt="Trenutna mobilna slika" 
+                                         class="rounded shadow-sm border" style="max-height: 150px;">
+                                    <p class="small text-muted mt-1">Trenutna mobilna slika (ostavite prazno ako ne želite promenu)</p>
+                                </div>
+                            @endif
+                            <input type="file" name="image_mobile" class="form-control">
                         </div>
 
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">

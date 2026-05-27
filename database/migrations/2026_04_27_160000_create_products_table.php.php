@@ -19,9 +19,9 @@ return new class extends Migration
             $table->text('desc');
             
             
-            $table->decimal('price', 10, 2)->nullable(); // Cena proizvoda
-            $table->boolean('is_featured')->default(false); // Za karusel na landing page-u
-            $table->integer('stock')->default(0); // "Rasprodato"
+            $table->decimal('price', 10, 2)->nullable(); 
+            $table->boolean('is_featured')->default(false); 
+            $table->integer('stock')->default(0); 
             
             $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
             $table->foreignId('created_by')->constrained('users');

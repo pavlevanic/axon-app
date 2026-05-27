@@ -83,6 +83,9 @@
                     @if(request('category'))
                         <input type="hidden" name="category" value="{{ request('category') }}">
                     @endif
+                    
+                    {{-- Skriveni input koji čuva vrednost sortiranja kada se menjaju checkboxevi --}}
+                    <input type="hidden" name="sort" id="hiddenSortInput" value="{{ request('sort', 'newest') }}">
 
                     @if(Route::currentRouteName() != 'shop.prebuilts' && count($categories) > 0)
                     <div class="card border-0 shadow-sm mb-3 rounded-0">
@@ -184,9 +187,22 @@
         </div>
 
         <div id="content-column" class="col-lg-9">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="fw-bold mb-0">{{ $viewTitle }}</h2>
-                <small class="text-muted">Prikazano: {{ $products->count() }} od {{ $products->total() }}</small>
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+                <div>
+                    <h2 class="fw-bold mb-0 d-inline-block me-3">{{ $viewTitle }}</h2>
+                    <small class="text-muted block-sm">Prikazano: {{ $products->count() }} od {{ $products->total() }}</small>
+                </div>
+                
+                <div class="d-flex align-items-center gap-2">
+                    <label for="visibleSortSelect" class="text-muted small text-nowrap mb-0">Sortiraj po:</label>
+                    <select id="visibleSortSelect" class="form-select form-select-sm rounded-0 border-0 shadow-sm" style="width: 180px;" onchange="updateSort(this.value)">
+                        <option value="newest" {{ request('sort', 'newest') == 'newest' ? 'selected' : '' }}>Najnovije</option>
+                        <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Cena: Rastuća</option>
+                        <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>Cena: Opadajuća</option>
+                        <option value="alpha_asc" {{ request('sort') == 'alpha_asc' ? 'selected' : '' }}>Naziv: A do Z</option>
+                        <option value="alpha_desc" {{ request('sort') == 'alpha_desc' ? 'selected' : '' }}>Naziv: Z do A</option>
+                    </select>
+                </div>
             </div>
 
             <div class="row g-4" id="products-grid">
@@ -207,7 +223,7 @@
                                     <span class="badge bg-danger rounded-0 px-2 py-1 fw-bold shadow-sm">RASPRODATO</span>
                                 @elseif($hasDiscount)
                                     <span class="badge bg-danger rounded-0 px-2 py-1 fw-bold shadow-sm">-{{ $percentage }}%</span>
-                                @else
+                                @elseif($product->created_at && $product->created_at->greaterThanOrEqualTo(now()->subDays(7)))
                                     <span class="badge bg-primary rounded-0 px-2 py-1 fw-bold shadow-sm">NOVO</span>
                                 @endif
                             </div>
@@ -272,8 +288,32 @@
                 @endforelse
             </div>
 
-            <div class="mt-5 d-flex justify-content-center">
-                {{ $products->links() }}
+            <div class="mt-5 d-flex justify-content-center custom-pagination">
+                @if ($products->hasPages())
+                    <nav>
+                        <ul class="pagination mb-0">
+                            @if ($products->onFirstPage())
+                                <li class="page-item disabled"><span class="page-link rounded-0">«</span></li>
+                            @else
+                                <li class="page-item"><a class="page-link rounded-0" href="{{ $products->previousPageUrl() }}" rel="prev">«</a></li>
+                            @endif
+            
+                            @foreach ($products->getUrlRange(1, $products->lastPage()) as $page => $url)
+                                @if ($page == $products->currentPage())
+                                    <li class="page-item active"><span class="page-link rounded-0">{{ $page }}</span></li>
+                                @else
+                                    <li class="page-item"><a class="page-link rounded-0" href="{{ $url }}">{{ $page }}</a></li>
+                                @endif
+                            @endforeach
+            
+                            @if ($products->hasMorePages())
+                                <li class="page-item"><a class="page-link rounded-0" href="{{ $products->nextPageUrl() }}" rel="next">»</a></li>
+                            @else
+                                <li class="page-item disabled"><span class="page-link rounded-0">»</span></li>
+                            @endif
+                        </ul>
+                    </nav>
+                @endif
             </div>
         </div>
     </div>
@@ -281,9 +321,27 @@
 
 @endif
 
-
+<style>
+/* CSS Trik za uklanjanje "Showing X to Y" teksta i centriranje Bootstrap paginacije */
+.custom-pagination nav p.text-muted,
+.custom-pagination nav div.flex-1.justify-between {
+    display: none !important;
+}
+.custom-pagination nav div.hidden {
+    display: block !important;
+}
+.custom-pagination ul.pagination {
+    margin-bottom: 0;
+}
+</style>
 
 <script>
+// Funkcija koja prenosi odabrano sortiranje u glavnu formu i vrši submit
+function updateSort(val) {
+    document.getElementById('hiddenSortInput').value = val;
+    document.getElementById('filterForm').submit();
+}
+
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar-column');
     const content = document.getElementById('content-column');

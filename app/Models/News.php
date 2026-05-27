@@ -13,6 +13,7 @@ class News extends Model
         'summary', 
         'content', 
         'image', 
+        'image_mobile',
         'type', 
         'is_active'
     ];

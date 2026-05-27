@@ -55,9 +55,14 @@
                             </div>
                         </div>
 
-                        <div class="mb-4">
+                        <div class="mb-3">
                             <label class="form-label fw-bold">Glavna Slika Vesti</label>
                             <input type="file" name="image" class="form-control">
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Slika Vesti za Mobilne Uređaje</label>
+                            <input type="file" name="image_mobile" class="form-control">
                         </div>
 
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">

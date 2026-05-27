@@ -21,10 +21,10 @@
                     </div>
                     @endforeach
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#newsTicker" data-bs-slide="prev">
+                <button class="carousel-control-prev" type="button" data-bs-target="#newsTicker" data-bs-slide="prev" aria-label="Prethodno">
                     <i class="bi bi-chevron-left text-dark small"></i>
                 </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#newsTicker" data-bs-slide="next">
+                <button class="carousel-control-next" type="button" data-bs-target="#newsTicker" data-bs-slide="next" aria-label="Sledece">
                     <i class="bi bi-chevron-right text-dark small"></i>
                 </button>
             </div>
@@ -41,12 +41,12 @@
             </a>
 
             <div class="d-flex align-items-center d-md-none">
-                <a class="nav-link text-white me-3" href="#" data-bs-toggle="collapse" data-bs-target="#searchCollapse">
+                <a class="nav-link text-white me-3" href="#" data-bs-toggle="collapse" data-bs-target="#searchCollapse" aria-label="Pretraga">
                     <i class="bi bi-search fs-5"></i>
                 </a>
             </div>
 
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-label="Otvori meni">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
@@ -73,7 +73,7 @@
                     </li>
 
                     <li class="nav-item d-none d-md-block">
-                        <a class="nav-link text-white px-3" href="#" data-bs-toggle="collapse" data-bs-target="#searchCollapse">
+                        <a class="nav-link text-white px-3" href="#" data-bs-toggle="collapse" data-bs-target="#searchCollapse" aria-label="Pretraga">
                             <i class="bi bi-search"></i>
                         </a>
                     </li>

@@ -14,16 +14,28 @@
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Scripts & Styles (Vite) -->
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.0/nouislider.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.0/nouislider.min.js"></script>
-    @stack('styles')
+    <!-- Fonts — preconnect za brži DNS, asinhrono učitavanje da ne blokira render -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap"
+      media="print"
+      onload="this.media='all'">
+<noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap">
+</noscript>
+
+<!-- Scripts & Styles (Vite) -->
+@vite(['resources/sass/app.scss', 'resources/js/app.js'])
+
+<!-- noUiSlider — CSS asinhrono, JS sa defer da ne blokira render -->
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.0/nouislider.min.css"
+      media="print"
+      onload="this.media='all'">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.0/nouislider.min.js" defer></script>
+
+@stack('styles')
 </head>
 <body>
     <div id="app">
@@ -72,9 +84,9 @@
                             <h4 class="fw-bold mb-3" style="letter-spacing: 2px;">AXON</h4>
                             <p class="text-secondary small">Vrhunske PC konfiguracije i komponente za entuzijaste. Snaga i preciznost u svakom bitu.</p>
                             <div class="d-flex justify-content-center justify-content-md-start gap-3 mt-3">
-                                <a href="#" class="text-primary fs-5"><i class="bi bi-instagram"></i></a>
-                                <a href="#" class="text-primary fs-5"><i class="bi bi-facebook"></i></a>
-                                <a href="#" class="text-primary fs-5"><i class="bi bi-twitter-x"></i></a>
+                                <a href="#" class="text-primary fs-5"><i class="bi bi-instagram" aria-label="Instagram profil"></i></a>
+                                <a href="#" class="text-primary fs-5"><i class="bi bi-facebook"aria-label="Facebook profil"></i></a>
+                                <a href="#" class="text-primary fs-5"><i class="bi bi-twitter-x"aria-label="X profil"></i></a>
                             </div>
                         </div>
             

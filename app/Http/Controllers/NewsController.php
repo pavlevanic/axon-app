@@ -36,7 +36,8 @@ class NewsController extends Controller
             'title' => 'required|max:255',
             'content' => 'required',
             'type' => 'required|in:hero,normal,promo',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'image_mobile' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
         $data = $request->all();
@@ -47,6 +48,12 @@ class NewsController extends Controller
             $imageName = time().'.'.$request->image->extension();
             $request->image->move(public_path('images/news'), $imageName);
             $data['image'] = 'images/news/' . $imageName;
+        }
+
+        if ($request->hasFile('image_mobile')) {
+            $mobileImageName = time().'_mobile.'.$request->image_mobile->extension();
+            $request->image_mobile->move(public_path('images/news'), $mobileImageName);
+            $data['image_mobile'] = 'images/news/' . $mobileImageName;
         }
 
         News::create($data);
@@ -76,87 +83,100 @@ class NewsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateNewsRequest $request, News $news,$id)
+    public function update(UpdateNewsRequest $request, News $news, $id)
     {
         $news = News::findOrFail($id);
 
-    $request->validate([
-        'title' => 'required|max:255',
-        'summary' => 'required',
-        'content' => 'required',
-        'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-        'type' => 'required|in:normal,hero',
-    ]);
+        $request->validate([
+            'title' => 'required|max:255',
+            'summary' => 'required',
+            'content' => 'required',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'image_mobile' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'type' => 'required|in:normal,hero',
+        ]);
 
-    $data = $request->all();
-    
-    $data['is_active'] = $request->has('is_active') ? 1 : 0;
-
-    if ($request->hasFile('image')) {
+        $data = $request->all();
         
-        if (file_exists(public_path($news->image))) {
-            unlink(public_path($news->image));
+        $data['is_active'] = $request->has('is_active') ? 1 : 0;
+
+        if ($request->hasFile('image')) {
+            if ($news->image && file_exists(public_path($news->image))) {
+                unlink(public_path($news->image));
+            }
+
+            $imageName = time().'.'.$request->image->extension();
+            $request->image->move(public_path('images/news'), $imageName);
+            $data['image'] = 'images/news/' . $imageName;
         }
 
-        $imageName = time().'.'.$request->image->extension();
-        $request->image->move(public_path('images/news'), $imageName);
-        $data['image'] = 'images/news/' . $imageName;
-    }
+        if ($request->hasFile('image_mobile')) {
+            if ($news->image_mobile && file_exists(public_path($news->image_mobile))) {
+                unlink(public_path($news->image_mobile));
+            }
 
-    $data['slug'] = Str::slug($request->title);
+            $mobileImageName = time().'_mobile.'.$request->image_mobile->extension();
+            $request->image_mobile->move(public_path('images/news'), $mobileImageName);
+            $data['image_mobile'] = 'images/news/' . $mobileImageName;
+        }
 
-    $news->update($data);
+        $data['slug'] = Str::slug($request->title);
 
-    return redirect()->route('news.index')->with('success', 'Vest uspešno ažurirana!');
+        $news->update($data);
+
+        return redirect()->route('news.index')->with('success', 'Vest uspešno ažurirana!');
     }
 
     public function uploadImage(Request $request)
-{
-    if ($request->hasFile('upload')) {
+    {
+        if ($request->hasFile('upload')) {
+            $file = $request->file('upload');
+            $filename = time().'_'.$file->getClientOriginalName();
+            $path = $file->storeAs('news_content', $filename, 'public');
 
-        $file = $request->file('upload');
+            return response()->json([
+                'url' => asset('storage/' . $path)
+            ]);
+        }
 
-        $filename = time().'_'.$file->getClientOriginalName();
-
-        $path = $file->storeAs('news_content', $filename, 'public');
-
-        return response()->json([
-            'url' => asset('storage/' . $path)
-        ]);
+        return response()->json(['error' => 'Upload failed'], 400);
     }
 
-    return response()->json(['error' => 'Upload failed'], 400);
-}
-
-   
     public function destroy($id)
     {
         $news = News::findOrFail($id);
 
-    if ($news->image) {
-        $mainImagePath = public_path($news->image); 
-        if (File::exists($mainImagePath)) {
-            File::delete($mainImagePath);
-        }
-    }
-
-    $content = $news->content;
-    
-    preg_match_all('/<img [^>]*src="([^"]+)"[^>]*>/i', $content, $matches);
-    
-    if (!empty($matches[1])) {
-        foreach ($matches[1] as $imageUrl) {
-            $path = parse_url($imageUrl, PHP_URL_PATH);
-            $serverPath = public_path($path);
-
-            if (File::exists($serverPath)) {
-                File::delete($serverPath);
+        if ($news->image) {
+            $mainImagePath = public_path($news->image); 
+            if (File::exists($mainImagePath)) {
+                File::delete($mainImagePath);
             }
         }
-    }
 
-    $news->delete();
+        if ($news->image_mobile) {
+            $mobileImagePath = public_path($news->image_mobile); 
+            if (File::exists($mobileImagePath)) {
+                File::delete($mobileImagePath);
+            }
+        }
 
-    return redirect()->route('news.index')->with('status', 'Vest i svi povezani fajlovi su uspešno obrisani.');
+        $content = $news->content;
+        
+        preg_match_all('/<img [^>]*src="([^"]+)"[^>]*>/i', $content, $matches);
+        
+        if (!empty($matches[1])) {
+            foreach ($matches[1] as $imageUrl) {
+                $path = parse_url($imageUrl, PHP_URL_PATH);
+                $serverPath = public_path($path);
+
+                if (File::exists($serverPath)) {
+                    File::delete($serverPath);
+                }
+            }
+        }
+
+        $news->delete();
+
+        return redirect()->route('news.index')->with('status', 'Vest i svi povezani fajlovi su uspešno obrisani.');
     }
 }

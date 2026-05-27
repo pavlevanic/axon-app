@@ -37,18 +37,21 @@ class CategoryController extends Controller
         $imagePath = null;
 
         if ($request->hasFile('image')) {
-            $imagePath = $this->handleImageUpload($request);
+            $paths     = $this->handleImageUpload($request);
+            $imagePath = $paths['original'];
+            $thumbPath = $paths['thumb'];
         }
-
+        
         Category::create([
-            'name' => $request->name,
-            'slug' => $request->slug,
-            'desc' => $request->desc,
-            'image' => $imagePath, 
+            'name'             => $request->name,
+            'slug'             => $request->slug,
+            'desc'             => $request->desc,
+            'image'            => $imagePath,
+            'image_thumb'      => $thumbPath ?? null,
             'attribute_groups' => $data['groups'],
-            'attribute_names' => $data['all_names'], 
-            'created_by' => Auth::id(),
-            'updated_by' => Auth::id()
+            'attribute_names'  => $data['all_names'],
+            'created_by'       => Auth::id(),
+            'updated_by'       => Auth::id()
         ]);
 
         return redirect()->route('category.index')->with('status', 'Kategorija je uspešno kreirana!');
@@ -71,24 +74,34 @@ class CategoryController extends Controller
         $data = $this->prepareAttributeData($request);
         $imagePath = $category->image; 
 
-        if ($request->hasFile('image')) {
-            // Brišemo staru sliku ako postoji
-            if ($category->image && File::exists(storage_path('app/public/' . $category->image))) {
-                File::delete(storage_path('app/public/' . $category->image));
-            }
-            // Upload nove slike
-            $imagePath = $this->handleImageUpload($request);
-        }
+        $imagePath = $category->image;
+$thumbPath = $category->image_thumb;
 
-        $category->update([
-            'name' => $request->name,
-            'slug' => $request->slug,
-            'desc' => $request->desc,
-            'image' => $imagePath,
-            'attribute_groups' => $data['groups'],
-            'attribute_names' => $data['all_names'], 
-            'updated_by' => Auth::id()
-        ]);
+if ($request->hasFile('image')) {
+    // Brisanje stare originalne slike
+    if ($category->image && File::exists(storage_path('app/public/' . $category->image))) {
+        File::delete(storage_path('app/public/' . $category->image));
+    }
+    // Brisanje starog thumbnailа
+    if ($category->image_thumb && File::exists(storage_path('app/public/' . $category->image_thumb))) {
+        File::delete(storage_path('app/public/' . $category->image_thumb));
+    }
+
+    $paths     = $this->handleImageUpload($request);
+    $imagePath = $paths['original'];
+    $thumbPath = $paths['thumb'];
+}
+
+$category->update([
+    'name'             => $request->name,
+    'slug'             => $request->slug,
+    'desc'             => $request->desc,
+    'image'            => $imagePath,
+    'image_thumb'      => $thumbPath,
+    'attribute_groups' => $data['groups'],
+    'attribute_names'  => $data['all_names'],
+    'updated_by'       => Auth::id()
+]);
 
         return redirect()->route('category.index')->with('status', 'Kategorija uspešno ažurirana!');
     }
@@ -103,24 +116,36 @@ class CategoryController extends Controller
         return redirect()->route('category.index')->with('status', 'Uspešno obrisano');
     }
 
-    // Pomoćna funkcija za upload da ne ponavljamo kod
     private function handleImageUpload(Request $request)
     {
-        $manager = new ImageManager(new Driver());
-        $destinationPath = storage_path('app/public/categories');
+        $manager         = new ImageManager(new Driver());
+    $destinationPath = storage_path('app/public/categories');
+    $thumbPath       = storage_path('app/public/categories/thumbs');
 
-        if (!File::exists($destinationPath)) {
-            File::makeDirectory($destinationPath, 0755, true);
-        }
+    if (!File::exists($destinationPath)) {
+        File::makeDirectory($destinationPath, 0755, true);
+    }
+    if (!File::exists($thumbPath)) {
+        File::makeDirectory($thumbPath, 0755, true);
+    }
 
-        $file = $request->file('image');
-        $filename = time() . '_' . $request->slug . '.webp';
-        $fullPath = $destinationPath . '/' . $filename;
+    $file     = $request->file('image');
+    $filename = time() . '_' . $request->slug . '.webp';
 
-        $image = $manager->read($file->getPathname());
-        $image->scale(height: 600)->toWebp(80)->save($fullPath);
+    $manager->read($file->getPathname())
+        ->scale(height: 600)
+        ->toWebp(80)
+        ->save($destinationPath . '/' . $filename);
 
-        return 'categories/' . $filename;
+    $manager->read($file->getPathname())
+        ->cover(200, 200)
+        ->toWebp(75)
+        ->save($thumbPath . '/' . $filename);
+
+    return [
+        'original' => 'categories/' . $filename,
+        'thumb'    => 'categories/thumbs/' . $filename,
+    ];
     }
 
     private function prepareAttributeData($request)

@@ -8,19 +8,28 @@
                 @if($heroNews->count() > 0)
                     @foreach($heroNews as $key => $news)
                         <div class="carousel-item {{ $key == 0 ? 'active' : '' }}" data-bs-interval="5000">
-                            <div style="
-                                background: url('{{ asset($news->image) }}') center/cover no-repeat;
+                            <div class="d-flex align-items-start align-items-md-center position-relative axon-hero-wrapper" style="
                                 height: 63.5vh;
                                 width: 90%;
-                                display: flex;
                                 margin-left: auto;
                                 margin-right: auto;
+                                overflow: hidden;
                                 border-radius: 15px;
-                            " class="d-flex align-items-center">
+                            ">
+                                
+                                <picture style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;">
+                                    <source media="(max-width: 767.98px)" srcset="{{ asset($news->image_mobile ?? $news->image) }}">
+                                    <img
+                                     src="{{ asset($news->image) }}"
+                                     alt="{{ $news->title }}"
+                                     fetchpriority="high"
+                                     style="width: 100%; height: 100%; object-fit: cover; object-position: center;"
+>
+                                </picture>
         
-                                <div class="container p-5">
+                                <div class="container p-5 axon-hero-container" style="position: relative; z-index: 2;">
                                     <div class="row">
-                                        <div class="col-lg-8 {{ $news->dark_image ? 'text-white' : 'text-dark' }}">
+                                        <div class="col-lg-8 axon-hero-content {{ $news->dark_image ? 'text-white' : 'text-dark' }}">
                                             <h1 class="display-2 fw-bold mb-3">{{ $news->title }}</h1>
                                             <p class="lead fs-4 mb-4" style="max-width: 600px; opacity: 0.9;">
                                                 {{ $news->summary }}
@@ -38,10 +47,10 @@
                 @endif
             </div>
         
-            <button class="carousel-control-prev hero-arrow" type="button" data-bs-target="#axonHeroCarousel" data-bs-slide="prev">
+            <button class="carousel-control-prev hero-arrow" type="button" data-bs-target="#axonHeroCarousel" data-bs-slide="prev" aria-label="Prethodno">
                 <i class="bi bi-chevron-left text-white fs-4"></i>
             </button>
-            <button class="carousel-control-next hero-arrow" type="button" data-bs-target="#axonHeroCarousel" data-bs-slide="next">
+            <button class="carousel-control-next hero-arrow" type="button" data-bs-target="#axonHeroCarousel" data-bs-slide="next" aria-label="Sledece" >
                 <i class="bi bi-chevron-right text-white fs-4"></i>
             </button>
         </div>
@@ -168,10 +177,13 @@
                             <div class="card h-100 border-0 shadow-sm hover-lift">
                                 <div class="position-relative overflow-hidden">
                                     @if($category->image)
-                                        <img src="{{ asset('storage/' . $category->image) }}"
-                                             class="card-img-top img-fluid"
-                                             alt="{{ $category->name }}"
-                                             style="height: 200px; object-fit: contain;">
+                                       <img src="{{ asset('storage/' . ($category->image_thumb ?? $category->image)) }}"
+                                        class="card-img-top img-fluid"
+                                        alt="{{ $category->name }}"
+                                        width="200"
+                                        height="200"
+                                        style="height: 200px; object-fit: contain;"
+                                        loading="lazy">
                                     @else
                                         <div class="bg-light d-flex align-items-center justify-content-center text-muted" style="height: 200px;">
                                             <i class="bi bi-image display-4"></i>

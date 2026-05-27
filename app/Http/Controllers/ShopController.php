@@ -12,7 +12,6 @@ class ShopController extends Controller
     {
         $categories = Category::where('id', '!=', 1)->get();
 
-        // Ako nema odabrane kategorije — prikaži landing sa kategorijama (nema potrebe za queryem)
         if (!$request->has('category')) {
             $products  = collect();
             $allSpecs  = [];
@@ -29,8 +28,9 @@ class ShopController extends Controller
         });
 
         $this->applySpecFilters($query, $request);
+        $this->applySorting($query, $request); // Dodato sortiranje umesto fiksnog ->latest()
 
-        $products = $query->latest()->paginate(12)->withQueryString();
+        $products = $query->paginate(12)->withQueryString();
 
         $selectedCategory = Category::where('slug', $request->category)->first();
         $viewTitle = $selectedCategory ? $selectedCategory->name : 'PC Komponente';
@@ -51,8 +51,9 @@ class ShopController extends Controller
         });
 
         $this->applySpecFilters($query, $request);
+        $this->applySorting($query, $request); // Dodato sortiranje umesto fiksnog ->latest()
 
-        $products  = $query->latest()->paginate(12)->withQueryString();
+        $products  = $query->paginate(12)->withQueryString();
         $viewTitle = 'Gotove Konfiguracije';
         $categories = collect();
 
@@ -88,6 +89,32 @@ class ShopController extends Controller
                     }
                 });
             }
+        }
+    }
+
+    // Nova pomoćna funkcija koja hendluje sortiranje
+    private function applySorting($query, $request)
+    {
+        $sort = $request->get('sort', 'newest');
+
+        switch ($sort) {
+            case 'price_asc':
+                // Koristimo COALESCE da ako proizvod ima popust, sortira po toj ceni, u suprotnom po regularnoj
+                $query->orderByRaw('COALESCE(discount_price, price) ASC');
+                break;
+            case 'price_desc':
+                $query->orderByRaw('COALESCE(discount_price, price) DESC');
+                break;
+            case 'alpha_asc':
+                $query->orderBy('name', 'asc');
+                break;
+            case 'alpha_desc':
+                $query->orderBy('name', 'desc');
+                break;
+            case 'newest':
+            default:
+                $query->latest();
+                break;
         }
     }
 

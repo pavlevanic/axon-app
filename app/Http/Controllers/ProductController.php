@@ -17,11 +17,18 @@ use App\Models\ProductImage;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-       $products = Product::with('category')->latest()->paginate(10);
-
-       return view('product.index', compact('products'));
+        $sortable = ['id', 'name', 'price', 'stock'];
+        $sort      = in_array($request->query('sort'), $sortable) ? $request->query('sort') : 'id';
+        $direction = $request->query('direction') === 'asc' ? 'asc' : 'desc';
+    
+        $products = Product::with('category')
+            ->orderBy($sort, $direction)
+            ->paginate(10)
+            ->withQueryString();
+    
+        return view('product.index', compact('products', 'sort', 'direction'));
     }
 
     public function create()
@@ -121,7 +128,6 @@ public function update(Request $request, $id)
         'updated_by' => Auth::id()
     ]);
 
-    // 5. Ako su dodate NOVE slike u galeriju
     if($request->hasFile('images')){
         $manager = new ImageManager(new Driver());
         $folderPath = 'storage/products/' . $product->slug;
@@ -140,7 +146,6 @@ public function update(Request $request, $id)
             
             $image->toWebp(80)->save($fullPath);
             
-            // Upis u product_images tabelu
             $product->images()->create([
                 'image_path' => $folderPath . '/' . $filename,
                 'position'   => $key
@@ -173,6 +178,7 @@ public function show($slug)
 
     return view('product.show', compact('product'));
 }
+
 
     public function destroy($id) 
     {
