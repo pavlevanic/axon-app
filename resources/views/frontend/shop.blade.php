@@ -2,12 +2,16 @@
 
 @section('content')
 
+
+
 @if(Route::currentRouteName() != 'shop.prebuilts' && count($categories) > 0 && !request('category'))
+
+@include('frontend.hero')
 
 <div class="container py-5">
 
     <div class="text-center mb-5">
-        <p class="text-primary fw-bold text-uppercase small ls-wide mb-2">Šta danas gradiš?</p>
+        <p class="text-primary fw-bold text-uppercase small ls-wide mb-2">Šta danas tražimo?</p>
         <h1 class="fw-bold display-5 mb-3">PC Komponente</h1>
         <p class="text-muted mx-auto" style="max-width: 520px;">
             Izaberi kategoriju i pronađi tačno ono što tražiš — od kućišta do napajanja,
@@ -84,7 +88,6 @@
                         <input type="hidden" name="category" value="{{ request('category') }}">
                     @endif
                     
-                    {{-- Skriveni input koji čuva vrednost sortiranja kada se menjaju checkboxevi --}}
                     <input type="hidden" name="sort" id="hiddenSortInput" value="{{ request('sort', 'newest') }}">
 
                     @if(Route::currentRouteName() != 'shop.prebuilts' && count($categories) > 0)
@@ -173,8 +176,9 @@
                             <label class="filter-label" for="stock">Samo na stanju</label>
                         </div>
                         <div class="filter-item-wrapper">
-                            <input type="checkbox" class="custom-check-input" name="on_sale" id="sale"
-                                   {{ request('on_sale') ? 'checked' : '' }} onchange="this.form.submit()">
+                            <input type="hidden" name="on_sale" value="0">
+                            <input type="checkbox" class="custom-check-input" name="on_sale" id="sale" value="1"
+                                   {{ request('on_sale') == '1' ? 'checked' : '' }} onchange="this.form.submit()">
                             <label class="filter-label" for="sale">Akcija/Popust</label>
                         </div>
                     </div>

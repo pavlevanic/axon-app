@@ -35,5 +35,9 @@ class AppServiceProvider extends ServiceProvider
                 ->get());
         });
         
+        if (config('app.env') === 'local') {
+            URL::forceRootUrl(config('app.url'));
+            URL::forceScheme('https');
+        }
     }
 }

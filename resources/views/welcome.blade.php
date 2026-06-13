@@ -9,7 +9,7 @@
                     @foreach($heroNews as $key => $news)
                         <div class="carousel-item {{ $key == 0 ? 'active' : '' }}" data-bs-interval="5000">
                             <div class="d-flex align-items-start align-items-md-center position-relative axon-hero-wrapper" style="
-                                height: 63.5vh;
+                                height: 70vh;
                                 width: 90%;
                                 margin-left: auto;
                                 margin-right: auto;

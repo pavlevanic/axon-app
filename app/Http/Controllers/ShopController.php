@@ -28,7 +28,7 @@ class ShopController extends Controller
         });
 
         $this->applySpecFilters($query, $request);
-        $this->applySorting($query, $request); // Dodato sortiranje umesto fiksnog ->latest()
+        $this->applySorting($query, $request);
 
         $products = $query->paginate(12)->withQueryString();
 
@@ -49,9 +49,9 @@ class ShopController extends Controller
         $query = Product::query()->whereHas('category', function ($q) {
             $q->where('id', 1);
         });
-
+        
         $this->applySpecFilters($query, $request);
-        $this->applySorting($query, $request); // Dodato sortiranje umesto fiksnog ->latest()
+        $this->applySorting($query, $request); 
 
         $products  = $query->paginate(12)->withQueryString();
         $viewTitle = 'Gotove Konfiguracije';
@@ -77,7 +77,7 @@ class ShopController extends Controller
         if ($request->has('in_stock')) {
             $query->where('stock', '>', 0);
         }
-        if ($request->has('on_sale')) {
+        if ($request->input('on_sale') == '1') {
             $query->whereNotNull('discount_price')->where('discount_price', '>', 0);
         }
         if ($request->has('specs')) {
@@ -92,14 +92,12 @@ class ShopController extends Controller
         }
     }
 
-    // Nova pomoćna funkcija koja hendluje sortiranje
     private function applySorting($query, $request)
     {
         $sort = $request->get('sort', 'newest');
 
         switch ($sort) {
             case 'price_asc':
-                // Koristimo COALESCE da ako proizvod ima popust, sortira po toj ceni, u suprotnom po regularnoj
                 $query->orderByRaw('COALESCE(discount_price, price) ASC');
                 break;
             case 'price_desc':

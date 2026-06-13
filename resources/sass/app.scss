@@ -1,9 +1,7 @@
-// --- Fonts ---
 
 @import 'variables';
 
 
-// Obavezno — uvek potrebno
 @import 'bootstrap/scss/functions';
 @import 'bootstrap/scss/variables';
 @import 'bootstrap/scss/variables-map';
@@ -13,13 +11,11 @@
 @import 'bootstrap/scss/reboot';
 @import 'bootstrap/scss/type';
 
-// Layout
 @import 'bootstrap/scss/containers';
 @import 'bootstrap/scss/grid';
 @import 'bootstrap/scss/helpers';
 @import 'bootstrap/scss/utilities/api';
 
-// Komponente — dodaj samo one koje koristiš
 @import 'bootstrap/scss/buttons';
 @import 'bootstrap/scss/nav';
 @import 'bootstrap/scss/navbar';
@@ -41,7 +37,7 @@
 @import 'bootstrap-icons/font/bootstrap-icons.css';
 
 body {
-    font-family: 'Inter', sans-serif !important;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
     letter-spacing: -0.02rem;
 }
 

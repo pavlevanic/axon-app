@@ -28,7 +28,7 @@
 <!-- Scripts & Styles (Vite) -->
 @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
-<!-- noUiSlider — CSS asinhrono, JS sa defer da ne blokira render -->
+<!-- noUiSlider -->
 <link rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.0/nouislider.min.css"
       media="print"
@@ -93,9 +93,9 @@
                         <div class="col-6 col-md-2 offset-md-2 text-center text-md-start">
                             <h6 class="text-uppercase fw-bold mb-3 small">Shop</h6>
                             <ul class="list-unstyled small text-secondary">
-                                <li class="mb-2"><a href="#" class="text-decoration-none text-secondary">Prebuild PCs</a></li>
-                                <li class="mb-2"><a href="#" class="text-decoration-none text-secondary">PC Komponente</a></li>
-                                <li class="mb-2"><a href="#" class="text-decoration-none text-secondary">Akcije</a></li>
+                                <li class="mb-2"><a href="{{ route('shop.prebuilts', ['on_sale' => 1]) }}" class="text-decoration-none text-secondary">Prebuild PCs</a></li>
+                                <li class="mb-2"><a href="{{ route('shop.components') }}" class="text-decoration-none text-secondary">PC Komponente</a></li>
+                                <li class="mb-2"><a href="{{ route('shop.prebuilts') }}" class="text-decoration-none text-secondary">Akcije</a></li>
                             </ul>
                         </div>
             
