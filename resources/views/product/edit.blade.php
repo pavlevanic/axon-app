@@ -39,11 +39,15 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Detaljan opis</label>
-                            <textarea name="desc" id="editor" class="form-control" rows="5">{{ old('desc', $product->desc) }}</textarea>
+                            <label class="form-label fw-bold">Glavni Sadržaj</label>
+                            
+                            <div id="axon-pell-editor"></div>
+                            
+                            <textarea name="content" id="axon-pell-textarea" hidden>{{ old('content', $news->content ?? $product->content ?? '') }}</textarea>
+                            
                             <div class="text-center">
-                                <button type="button" class="btn btn-outline-dark mb-2 text-center mt-1" onclick="openSourceEditor()">
-                                    <>Source
+                                <button type="button" id="axon-source-btn" class="btn btn-outline-dark mb-2 text-center mt-2">
+                                    Source
                                 </button>
                             </div>
                         </div>

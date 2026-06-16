@@ -31,13 +31,13 @@
                                     <div class="row">
                                         <div class="col-lg-8 axon-hero-content {{ $news->dark_image ? 'text-white' : 'text-dark' }}">
                                             <h1 class="display-2 fw-bold mb-3">{{ $news->title }}</h1>
-                                            <p class="lead fs-4 mb-4" style="max-width: 600px; opacity: 0.9;">
+                                            <p class="lead fs-4 mb-4 fw-normal" style="max-width: 600px; opacity: 0.9;">
                                                 {{ $news->summary }}
                                             </p>
-                                            <a href="{{ route('news.show', $news->slug) }}" 
-                                               class="btn {{ $news->dark_image ? 'btn-light text-black' : 'btn-primary text-white' }} btn-lg px-5 py-3 rounded-4 fw-bold shadow">
-                                                PROČITAJ VIŠE
-                                            </a>
+                                            <a href="{{ $news->custom_url ? url($news->custom_url) : route('news.show', $news->slug) }}" 
+                                                class="btn {{ $news->dark_image ? 'btn-light text-black' : 'btn-primary text-white' }} btn-lg px-5 py-3 rounded-4 fw-bold shadow">
+                                                 {{ $news->custom_url ? 'SAZNAJ VIŠE' : 'PROČITAJ VIŠE' }}
+                                             </a>
                                         </div>
                                     </div>
                                 </div>

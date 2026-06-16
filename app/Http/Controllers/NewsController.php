@@ -1,12 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Http\Request;
+
 use App\Models\News;
-use App\Http\Requests\StoreNewsRequest;
-use App\Http\Requests\UpdateNewsRequest;
+use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
+use Illuminate\Validation\ValidationException;
 
 class NewsController extends Controller
 {
@@ -30,30 +31,27 @@ class NewsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreNewsRequest $request)
+    public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'required|max:255',
-            'content' => 'required',
+            'summary' => 'required',
+            'content' => 'nullable',
             'type' => 'required|in:hero,normal,promo',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'image_mobile' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
+            'image' => 'nullable|image|max:2048',
+            'image_mobile' => 'nullable|image|max:2048',
+            'custom_url' => 'nullable|string|max:255',
+            'dark_image' => 'sometimes|boolean',
         ]);
 
-        $data = $request->all();
-        
-        $data['slug'] = Str::slug($request->title);
+        $data = $this->buildNewsPayload($request, $validated);
 
         if ($request->hasFile('image')) {
-            $imageName = time().'.'.$request->image->extension();
-            $request->image->move(public_path('images/news'), $imageName);
-            $data['image'] = 'images/news/' . $imageName;
+            $data['image'] = $this->storeNewsImage($request->file('image'), '', 'image');
         }
 
         if ($request->hasFile('image_mobile')) {
-            $mobileImageName = time().'_mobile.'.$request->image_mobile->extension();
-            $request->image_mobile->move(public_path('images/news'), $mobileImageName);
-            $data['image_mobile'] = 'images/news/' . $mobileImageName;
+            $data['image_mobile'] = $this->storeNewsImage($request->file('image_mobile'), '_mobile', 'image_mobile');
         }
 
         News::create($data);
@@ -83,44 +81,32 @@ class NewsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateNewsRequest $request, News $news, $id)
+    public function update(Request $request, $id)
     {
         $news = News::findOrFail($id);
 
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'required|max:255',
             'summary' => 'required',
-            'content' => 'required',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'image_mobile' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'type' => 'required|in:normal,hero',
+            'content' => 'nullable',
+            'image' => 'nullable|image|max:2048',
+            'image_mobile' => 'nullable|image|max:2048',
+            'type' => 'required|in:normal,hero,promo',
+            'custom_url' => 'nullable|string|max:255',
+            'dark_image' => 'sometimes|boolean',
         ]);
 
-        $data = $request->all();
-        
-        $data['is_active'] = $request->has('is_active') ? 1 : 0;
+        $data = $this->buildNewsPayload($request, $validated);
 
         if ($request->hasFile('image')) {
-            if ($news->image && file_exists(public_path($news->image))) {
-                unlink(public_path($news->image));
-            }
-
-            $imageName = time().'.'.$request->image->extension();
-            $request->image->move(public_path('images/news'), $imageName);
-            $data['image'] = 'images/news/' . $imageName;
+            $this->deleteNewsImage($news->image);
+            $data['image'] = $this->storeNewsImage($request->file('image'), '', 'image');
         }
 
         if ($request->hasFile('image_mobile')) {
-            if ($news->image_mobile && file_exists(public_path($news->image_mobile))) {
-                unlink(public_path($news->image_mobile));
-            }
-
-            $mobileImageName = time().'_mobile.'.$request->image_mobile->extension();
-            $request->image_mobile->move(public_path('images/news'), $mobileImageName);
-            $data['image_mobile'] = 'images/news/' . $mobileImageName;
+            $this->deleteNewsImage($news->image_mobile);
+            $data['image_mobile'] = $this->storeNewsImage($request->file('image_mobile'), '_mobile', 'image_mobile');
         }
-
-        $data['slug'] = Str::slug($request->title);
 
         $news->update($data);
 
@@ -129,7 +115,7 @@ class NewsController extends Controller
 
     public function uploadImage(Request $request)
     {
-        if ($request->hasFile('upload')) {
+        if ($request->hasFile('upload') && $request->file('upload')->isValid()) {
             $file = $request->file('upload');
             $filename = time().'_'.$file->getClientOriginalName();
             $path = $file->storeAs('news_content', $filename, 'public');
@@ -146,31 +132,22 @@ class NewsController extends Controller
     {
         $news = News::findOrFail($id);
 
-        if ($news->image) {
-            $mainImagePath = public_path($news->image); 
-            if (File::exists($mainImagePath)) {
-                File::delete($mainImagePath);
-            }
-        }
-
-        if ($news->image_mobile) {
-            $mobileImagePath = public_path($news->image_mobile); 
-            if (File::exists($mobileImagePath)) {
-                File::delete($mobileImagePath);
-            }
-        }
+        $this->deleteNewsImage($news->image);
+        $this->deleteNewsImage($news->image_mobile);
 
         $content = $news->content;
-        
-        preg_match_all('/<img [^>]*src="([^"]+)"[^>]*>/i', $content, $matches);
-        
-        if (!empty($matches[1])) {
-            foreach ($matches[1] as $imageUrl) {
-                $path = parse_url($imageUrl, PHP_URL_PATH);
-                $serverPath = public_path($path);
 
-                if (File::exists($serverPath)) {
-                    File::delete($serverPath);
+        if ($content) {
+            preg_match_all('/<img [^>]*src="([^"]+)"[^>]*>/i', $content, $matches);
+
+            if (!empty($matches[1])) {
+                foreach ($matches[1] as $imageUrl) {
+                    $path = parse_url($imageUrl, PHP_URL_PATH);
+                    $serverPath = public_path($path);
+
+                    if (File::exists($serverPath)) {
+                        File::delete($serverPath);
+                    }
                 }
             }
         }
@@ -178,5 +155,56 @@ class NewsController extends Controller
         $news->delete();
 
         return redirect()->route('news.index')->with('status', 'Vest i svi povezani fajlovi su uspešno obrisani.');
+    }
+
+    private function buildNewsPayload(Request $request, array $validated): array
+    {
+        $content = $validated['content'] ?? null;
+
+        return [
+            'title' => $validated['title'],
+            'slug' => Str::slug($validated['title']),
+            'summary' => $validated['summary'],
+            'content' => !empty($content) ? $content : '<p>&nbsp;</p>',
+            'type' => $validated['type'],
+            'custom_url' => $validated['custom_url'] ?? null,
+            'dark_image' => $request->has('dark_image') ? 1 : 0,
+            'is_active' => $request->has('is_active') ? 1 : 0,
+        ];
+    }
+
+    private function storeNewsImage(UploadedFile $file, string $suffix = '', string $field = 'image'): string
+    {
+        if (!$file->isValid()) {
+            throw ValidationException::withMessages([
+                $field => 'Upload slike nije uspeo: ' . $file->getErrorMessage(),
+            ]);
+        }
+
+        $directory = public_path('images/news');
+
+        if (!File::isDirectory($directory)) {
+            File::makeDirectory($directory, 0755, true);
+        }
+
+        $extension = $file->getClientOriginalExtension() ?: 'jpg';
+        $filename = time() . $suffix . '_' . Str::random(6) . '.' . $extension;
+
+        $file->move($directory, $filename);
+
+        return 'images/news/' . $filename;
+    }
+
+    private function deleteNewsImage(?string $path): void
+    {
+        if (!$path) {
+            return;
+        }
+
+        $fullPath = public_path($path);
+
+        if (File::exists($fullPath)) {
+            File::delete($fullPath);
+        }
     }
 }

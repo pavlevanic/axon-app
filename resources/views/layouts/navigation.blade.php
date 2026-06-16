@@ -59,7 +59,7 @@
                     {{-- Komponente hover dropdown --}}
                     <li class="nav-item nav-dropdown-hover">
                         <a class="nav-link fw-semibold text-white text-uppercase small px-3" href="{{ route('shop.components') }}">
-                            Komponente
+                            Komponente 🡻
                         </a>
                         <ul class="nav-dropdown-menu">
                             @foreach($navCategories as $cat)

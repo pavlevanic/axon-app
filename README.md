@@ -1,58 +1,72 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Axon - Web Shop Platforma za Računarske Komponente
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Axon je veb aplikacija za elektronsku trgovinu (e-commerce) specijalizovana za katalogizaciju, pretragu i onlajn prodaju računarskog hardvera i prateće opreme. Projekat je razvijen kao seminarski rad na Fakultetu prirodno-matematičkih nauka (PMF), smer Informatika.
 
-## About Laravel
+Sistem pokriva celokupan proces jedne moderne internet prodavnice – od naprednog upravljanja proizvodima i CMS sadržajem kroz administratorski panel, do korisničkog dela sa korpom, narudžbenicama i modulom za konfigurisanje računara.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Glavne Funkcionalnosti
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 1. E-Commerce i Korisnički Modul
+* Katalog hardvera: Detaljan pregled, filtriranje i pretraga artikala po kategorijama, brendovima i specifikacijama.
+* Autentifikacija i autorizacija: Kastomizovan sistem registracije i prijave korisnika, razvijen ručno (bez korišćenja gotovih starter kitova), sa definisanim ulogama za klijente i administratore.
+* Sistem korpe: Dinamičko dodavanje, izmena i brisanje proizvoda u korpi pre završetka kupovine.
+* Procesiranje porudžbina: Kreiranje narudžbenica sa istorijom kupovine za registrovane korisnike.
 
-## Learning Laravel
+### 2. Modul za Sklapanje Konfiguracija (PC Builder)
+* Interaktivni konfigurator: Vođeni proces selekcije ključnih komponenti računara u realnom vremenu.
+* Validacija kompatibilnosti: Logika koja na osnovu izabranih hardverskih parametara (poput ležišta procesora, tipa radne memorije i form faktora) filtrira i prikazuje isključivo kompatibilne komponente.
+* Kalkulator potrošnje: Automatsko računanje ukupne snage (TDP) i provera adekvatnosti izabranog napajanja.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 3. Napredni Administratorski Panel (CMS)
+* Upravljanje proizvodima: Kompletan CRUD sistem za administraciju artikala, zaliha i tehničkih specifikacija hardvera.
+* Upravljanje marketing sadržajem: Modul za kreiranje i izmenu vesti, akcija i promotivnih banera na početnoj stranici.
+* Dinamički Hero Carousel: Opcija postavljanja važnih vesti ili banera u glavnu sekciju (slider) uz mogućnost preusmeravanja korisnika na prilagođene URL rute.
+* Kontrola estetike banera: Mogućnost definisanja svetle ili tamne pozadine učitanog banera kroz formu, što sistem koristi za automatsko prilagođavanje kontrasta teksta i dugmadi radi optimalne čitljivosti.
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+## Tehnološki Stek
 
-## Agentic Development
+* Backend: Laravel 13.x (PHP 8.4)
+* Baza podataka: MySQL
+* Frontend: Blade templating engine, Bootstrap 5.x, JavaScript (Vanilla ES6)
+* Razvojno okruženje: Laragon / Windows
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+---
 
-```bash
-composer require laravel/boost --dev
+## Struktura Baze Podataka
 
-php artisan boost:install
-```
+Baza podataka je projektovana u trećoj normalnoj formi (3NF) sa optimizovanim relacijama za potrebe e-commerce platforme.
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+### Ključni Modeli:
+* User - Upravljanje korisnicima, sesijama i administratorskim pravima.
+* Product - Centralni entitet za sve artikle, cene, opise i stanja na zalihama.
+* ComponentSpecification - Tabela sa specifičnim hardverskim atributima koji se koriste za filtriranje i validaciju u konfiguratoru.
+* News - Model za upravljanje dinamičkim banerima i vestima (custom_url, dark_image).
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Instalacija i Pokretanje u Lokalnom Okruženju
 
-## Code of Conduct
+1. Klonirajte repozitorijum sa GitHub-a:
+   git clone https://github.com/pavlevanic/axon-app
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+2. Instalirajte zavisnosti (Composer):
+   composer install
+   npm install
 
-## Security Vulnerabilities
+3. Kreirajte konfiguracioni fajl:
+   Kopirajte .env.example u .env i podesite parametre Vaše lokalne MySQL baze podataka (DB_DATABASE, DB_USERNAME, DB_PASSWORD).
+   cp .env.example .env
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+4. Generišite ključ aplikacije:
+   php artisan key:generate
 
-## License
+5. Pokrenite migracije i seed-ere:
+   php artisan migrate --seed
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+6. Kreirajte simbolički link za skladište fajlova:
+   Neophodno za ispravno učitavanje i prikaz slika proizvoda i banera iz admin panela.
+   php artisan storage:link

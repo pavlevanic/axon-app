@@ -11,7 +11,7 @@
                 </div>
 
                 <div class="card-body p-4">
-                    <form action="{{ route('news.update', $news->id) }}" method="POST" enctype="multipart/form-data" id="newsForm">
+                    <form action="{{ route('news.update', $news->id) }}" method="POST" enctype="multipart/form-data" id="newsForm" onsubmit="return syncNewsFormContent()">
                         @csrf
                         @method('PUT')
 
@@ -34,8 +34,29 @@
                         </div>
 
                         <div class="mb-3 border rounded p-3 bg-light-subtle">
+                            <label class="form-label fw-bold mb-3">
+                                <i class="bi bi-sliders me-1 text-primary"></i> Hero sekcija – dodatna podešavanja
+                            </label>
+                            <div class="mb-3">
+                                <label for="custom_url" class="form-label">Prilagođeni URL (Opciono)</label>
+                                <input type="text" name="custom_url" id="custom_url" class="form-control"
+                                       value="{{ old('custom_url', $news->custom_url) }}" placeholder="/pc-builder">
+                                <small class="text-muted">Ako postavite URL, baner vodi direktno na tu stranicu umesto na vest.</small>
+                            </div>
                             <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" name="is_active" id="isActive" value="1" checked>
+                                <input class="form-check-input" type="checkbox" name="dark_image" id="darkImage" value="1"
+                                       {{ old('dark_image', $news->dark_image) == 1 ? 'checked' : '' }}>
+                                <label class="form-check-label fw-bold" for="darkImage">
+                                    <i class="bi bi-moon-fill me-1"></i> Tamna pozadinska slika
+                                </label>
+                            </div>
+                            <small class="text-muted d-block mt-1">Uključeno = svetlo dugme i beli tekst. Isključeno = tamno dugme i crni tekst.</small>
+                        </div>
+
+                        <div class="mb-3 border rounded p-3 bg-light-subtle">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" name="is_active" id="isActive" value="1"
+                                       {{ old('is_active', $news->is_active) ? 'checked' : '' }}>
                                 <label class="form-check-label fw-bold" for="isActive">
                                     <i class="bi bi-eye-fill me-1 text-success"></i> Status: Vest je aktivna
                                 </label>
@@ -46,21 +67,7 @@
                         {{-- Kratak opis --}}
                         <div class="mb-3">
                             <label class="form-label fw-bold">Kratak opis (Summary)</label>
-                            <textarea name="summary" class="form-control" rows="2">{{ old('summary', $news->summary) }}</textarea>
-                        </div>
-
-                        {{-- Glavni tekst --}}
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Glavni Sadržaj</label>
-                            <div id="editor" style="min-height: 300px;">
-                                {!! old('content', $news->content) !!}
-                            </div>
-                            <textarea name="content" id="content" style="display: none;"></textarea>
-                            <div class="text-center">
-                                <button type="button" class="btn btn-dark mb-2 text-center mt-1" onclick="openSourceEditor()">
-                                    <>Source
-                                </button>
-                            </div>
+                            <textarea name="summary" class="form-control" rows="2" required>{{ old('summary', $news->summary) }}</textarea>
                         </div>
 
                         {{-- Slika --}}
@@ -73,11 +80,11 @@
                                     <p class="small text-muted mt-1">Trenutna slika (ostavite prazno ako ne želite promenu)</p>
                                 </div>
                             @endif
-                            <input type="file" name="image" class="form-control">
+                            <input type="file" name="image" id="image" class="form-control" accept="image/jpeg,image/png,image/webp">
                         </div>
 
                         {{-- Mobilna Slika --}}
-                        <div class="mb-4">
+                        <div class="mb-3">
                             <label class="form-label fw-bold">Slika Vesti za Mobilne Uređaje</label>
                             @if($news->image_mobile)
                                 <div class="mb-2">
@@ -86,7 +93,21 @@
                                     <p class="small text-muted mt-1">Trenutna mobilna slika (ostavite prazno ako ne želite promenu)</p>
                                 </div>
                             @endif
-                            <input type="file" name="image_mobile" class="form-control">
+                            <input type="file" name="image_mobile" id="image_mobile" class="form-control" accept="image/jpeg,image/png,image/webp">
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Glavni Sadržaj</label>
+                            
+                            <div id="axon-pell-editor"></div>
+                            
+                            <textarea name="content" id="axon-pell-textarea" hidden>{{ old('content', $news->content ?? $product->content ?? '') }}</textarea>
+                            
+                            <div class="text-center">
+                                <button type="button" id="axon-source-btn" class="btn btn-outline-dark mb-2 text-center mt-2">
+                                    Source
+                                </button>
+                            </div>
                         </div>
 
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
@@ -99,54 +120,5 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="sourceModal" tabindex="-1">
-    <div class="modal-dialog modal-xl">
-      <div class="modal-content">
-  
-        <div class="modal-header">
-          <h5 class="modal-title">HTML Source Editor</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-  
-        <div class="modal-body">
-          <textarea id="htmlSource" style="width:100%;height:500px;font-family:monospace;"></textarea>
-        </div>
-  
-        <div class="modal-footer">
-          <button class="btn btn-outline-danger" data-bs-dismiss="modal">Nazad</button>
-          <button class="btn btn-primary" onclick="applySource()">Potvrdi</button>
-        </div>
-  
-      </div>
-    </div>
-  </div>
-  <script>
-    let sourceModal;
-
-document.addEventListener('DOMContentLoaded', function () {
-    sourceModal = new bootstrap.Modal(document.getElementById('sourceModal'));
-});
-
-function openSourceEditor() {
-    const html = window.editor.getData();
-
-    document.getElementById('htmlSource').value = html;
-
-    sourceModal.show();
-}
-
-function applySource() {
-    const html = document.getElementById('htmlSource').value;
-
-    window.editor.setData(html);
-
-    sourceModal.hide();
-}
-  </script>
-<script>
-    document.getElementById('newsForm').addEventListener('submit', function () {
-    document.getElementById('content').value = window.editor.getData();
-});
-</script>
-
+@include('admin.news._form_scripts')
 @endsection

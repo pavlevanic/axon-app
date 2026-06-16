@@ -30,7 +30,7 @@
                     <p class="pc-hero-desc">
                         Treba ti pomoć da sastavis računar?Uz naš PC builder biranje komponenti je lako.
                     </p>
-                    <a href=""
+                    <a href="{{Route('builder.index')}}"
                        class="btn btn-primary fw-bold px-4 py-2 rounded-0 pc-hero-cta">
                         Počni da sastavljaš
                         <svg class="ms-2" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">

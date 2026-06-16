@@ -21,23 +21,21 @@ class AppServiceProvider extends ServiceProvider
      * Bootstrap any application services.
      */
     public function boot(): void
-    {
-        Schema::defaultStringLength(191);
-        if (app()->environment('local')) {
-            URL::forceScheme('https');
-        }
-        Paginator::useBootstrapFive();
+{
+    Schema::defaultStringLength(191);
+    Paginator::useBootstrapFive();
 
-        view()->composer('layouts.app', function ($view) {
-            $view->with('regularNews', \App\Models\News::where('type', 'normal')
-                ->where('is_active', 1)
-                ->latest()
-                ->get());
-        });
-        
-        if (config('app.env') === 'local') {
-            URL::forceRootUrl(config('app.url'));
-            URL::forceScheme('https');
-        }
+    view()->composer('layouts.app', function ($view) {
+        $view->with('regularNews', \App\Models\News::where('type', 'normal')
+            ->where('is_active', 1)
+            ->latest()
+            ->take(5)
+            ->get());
+    });
+    
+    if (app()->environment('production')) {
+        URL::forceRootUrl(config('app.url'));
+        URL::forceScheme('https');
     }
+}
 }

@@ -10,7 +10,7 @@
         "@popperjs/core": "^2.11.6",
         "@tailwindcss/vite": "^4.0.0",
         "axios": "^1.11.0",
-        "bootstrap": "^5.2.3",
+        "bootstrap": "5.3",
         "concurrently": "^9.0.1",
         "laravel-vite-plugin": "^3.0.1",
         "sass": "^1.56.1",
@@ -18,9 +18,10 @@
         "vite": "^8.0.0"
     },
     "dependencies": {
-        "@ckeditor/ckeditor5-build-classic": "^41.4.2",
-        "@ckeditor/ckeditor5-source-editing": "^48.1.0",
         "bootstrap-icons": "^1.13.1",
-        "ckeditor5": "^48.0.1"
+        "pell": "^1.0.6"
+    },
+    "overrides": {
+        "shell-quote": "^1.8.4"
     }
 }

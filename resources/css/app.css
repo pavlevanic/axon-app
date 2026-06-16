@@ -68,29 +68,29 @@ body {
 }
 
 h1, h2, h3, .fw-bold {
-    letter-spacing: -0.05rem; /* Još više za naslove */
+    letter-spacing: -0.05rem; 
 }
 
 #axonHeroCarousel .carousel-indicators {
     position: absolute;
-    bottom: 20px; /* Razmak od donje ivice slike */
+    bottom: 20px; 
     margin-bottom: 0;
-    z-index: 15; /* Da budu iznad slike */
+    z-index: 15; 
 }
 
 /* Kontejner bara */
 .news-ticker-bar {
-    background-color: #f3f0f7; /* Boja sa slike */
-    height: 45px; /* Malo dublji bar za veća slova */
+    background-color: #f3f0f7;
+    height: 45px; 
     overflow: hidden;
 }
 
 /* Veći i jasniji font */
 .ticker-link {
-    font-size: 2rem; /* Veća slova */
+    font-size: 2rem; 
     font-weight: 500;
     color: #1a1a1a;
-    line-height: 45px; /* Centriranje teksta vertikalno */
+    line-height: 45px; 
     display: inline-block;
 }
 

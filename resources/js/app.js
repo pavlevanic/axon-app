@@ -7,6 +7,19 @@ window.bootstrap = bootstrap;
 window.scrollToTop = function () {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 };
+document.addEventListener('DOMContentLoaded', function () {
+    const backToTopBtn = document.getElementById('back-to-top-btn');
+
+    if (backToTopBtn) {
+        window.addEventListener('scroll', function () {
+            if (window.scrollY > 600) {
+                backToTopBtn.style.display = 'block';
+            } else {
+                backToTopBtn.style.display = 'none';
+            }
+        });
+    }
+});
 
 document.addEventListener('DOMContentLoaded', function () {
     const slider    = document.getElementById('price-slider');
@@ -51,10 +64,83 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-document.addEventListener('DOMContentLoaded', function () {
-    if (document.querySelector('#editor')) {
-        import('./ckeditor').then(({ initEditor }) => {
-            initEditor('#editor');
+/* ═══════════════════════════════════════════════════════════
+   AXON GLOBAL PELL EDITOR INTEGRATION
+   ═══════════════════════════════════════════════════════════ */
+   document.addEventListener('DOMContentLoaded', function () {
+    const editorDiv = document.getElementById('axon-pell-editor');
+    const txtArea = document.getElementById('axon-pell-textarea');
+    const sourceBtn = document.getElementById('axon-source-btn');
+    
+    if (!editorDiv || !txtArea || !sourceBtn) return;
+
+    let isSourceMode = false;
+
+    const script = document.createElement('script');
+    script.src = "https://unpkg.com/pell/dist/pell.min.js";
+    document.head.appendChild(script);
+
+    script.onload = function () {
+        const editor = window.pell.init({
+            element: editorDiv,
+            onChange: html => {
+                if (!isSourceMode) {
+                    txtArea.value = html;
+                }
+            },
+            defaultParagraphSeparator: 'p',
+            actions: [
+                'bold', 'italic', 'underline', 'heading1', 'heading2', 'olist', 'ulist', 'link', 'image',
+                {
+                    name: 'video',
+                    icon: '<b>V</b>',
+                    title: 'Ubaci Video',
+                    result: () => {
+                        const url = prompt('Unesite putanju do videa (npr. /videos/fajl.webm):');
+                        if (url) {
+                            const videoHtml = `
+                                <div class="mb-4 text-center">
+                                    <video class="w-100 rounded shadow-sm" controls style="max-width: 100%; height: auto;">
+                                        <source src="${url}" type="video/webm">
+                                        <source src="${url.replace('.webm', '.mp4')}" type="video/mp4">
+                                        Vaš browser ne podržava video.
+                                    </video>
+                                </div><p></p>`;
+                            window.pell.exec('insertHTML', videoHtml);
+                        }
+                    }
+                }
+            ]
         });
-    }
+
+        if (txtArea.value) {
+            const pellContent = editorDiv.querySelector('.pell-content');
+            if (pellContent) {
+                pellContent.innerHTML = txtArea.value;
+            }
+        }
+
+        sourceBtn.addEventListener('click', function () {
+            const pellContent = editorDiv.querySelector('.pell-content');
+
+            if (!isSourceMode) {
+                editorDiv.style.display = 'none';
+                txtArea.classList.add('source-editor-active');
+                sourceBtn.textContent = 'Visual Editor';
+                sourceBtn.classList.remove('btn-outline-dark');
+                sourceBtn.classList.add('btn-dark');
+                isSourceMode = true;
+            } else {
+                if (pellContent) {
+                    pellContent.innerHTML = txtArea.value;
+                }
+                txtArea.classList.remove('source-editor-active');
+                editorDiv.style.display = 'block';
+                sourceBtn.textContent = 'Source';
+                sourceBtn.classList.remove('btn-dark');
+                sourceBtn.classList.add('btn-outline-dark');
+                isSourceMode = false;
+            }
+        });
+    };
 });

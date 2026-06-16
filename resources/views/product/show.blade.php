@@ -147,55 +147,55 @@
 
     <div class="container mt-5">
         <h4 class="mb-4 fw-bold">Tehničke Specifikacije</h4>
-    
+
         @php
             $detailedGroups = array_filter($allGroups, function($key) {
                 return strtolower($key) !== 'osnovni';
             }, ARRAY_FILTER_USE_KEY);
-            
+
             $count = count($detailedGroups);
         @endphp
-    
+
         @if($count > 0)
             <div class="row">
                 @php
                     $chunks = array_chunk($detailedGroups, ceil($count / 2), true);
                 @endphp
-    
-                @foreach($chunks as $columnGroups)
+
+                @foreach($chunks as $colIndex => $columnGroups)
                     <div class="col-md-6">
-                        <div class="accordion accordion-flush">
+                        <div class="accordion accordion-flush product-specs-accordion" id="specsAccordionCol{{ $colIndex }}">
                             @foreach($columnGroups as $groupName => $attributes)
-                                <div class="accordion-item border-bottom mb-2">
-                                    <h2 class="accordion-header" id="flush-heading-{{ Str::slug($groupName) }}">
-                                        <button class="accordion-button collapsed fw-bold text-dark bg-transparent" 
-                                                type="button" 
-                                                data-bs-toggle="collapse" 
-                                                data-bs-target="#flush-collapse-{{ Str::slug($groupName) }}" 
-                                                aria-expanded="false">
+                                @php $itemId = 'spec-' . $colIndex . '-' . Str::slug($groupName); @endphp
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="heading-{{ $itemId }}">
+                                        <button class="accordion-button collapsed"
+                                                type="button"
+                                                data-bs-toggle="collapse"
+                                                data-bs-target="#collapse-{{ $itemId }}"
+                                                aria-expanded="false"
+                                                aria-controls="collapse-{{ $itemId }}">
                                             {{ $groupName }}
                                         </button>
                                     </h2>
-                                    
-                                    <div id="flush-collapse-{{ Str::slug($groupName) }}" 
-                                         class="accordion-collapse collapse">
+
+                                    <div id="collapse-{{ $itemId }}"
+                                         class="accordion-collapse collapse"
+                                         aria-labelledby="heading-{{ $itemId }}"
+                                         data-bs-parent="#specsAccordionCol{{ $colIndex }}">
                                         <div class="accordion-body p-0">
-                                            <table class="table table-sm mb-0">
+                                            <table class="table table-sm table-borderless mb-0 product-specs-table">
                                                 <tbody>
                                                     @foreach($attributes as $attr)
                                                         @php
                                                             $fullKey = $groupName . '_' . $attr;
                                                             $value = $product->specs[$fullKey] ?? $product->specs[$attr] ?? null;
                                                         @endphp
-    
+
                                                         @if(!empty($value))
                                                             <tr>
-                                                                <td class="fw-bold py-2 ps-3 w-50" style="background-color: #f8f9fa; font-size: 0.9rem;">
-                                                                    {{ $attr }}
-                                                                </td>
-                                                                <td class="py-2 ps-3" style="font-size: 0.9rem;">
-                                                                    {{ $value }}
-                                                                </td>
+                                                                <td class="spec-label py-2 ps-3 w-50">{{ $attr }}</td>
+                                                                <td class="spec-value py-2 ps-3">{{ $value }}</td>
                                                             </tr>
                                                         @endif
                                                     @endforeach
@@ -210,7 +210,7 @@
                 @endforeach
             </div>
         @else
-            <p class="text-muted italic">Nema dodatnih tehničkih specifikacija.</p>
+            <p class="text-muted fst-italic">Nema dodatnih tehničkih specifikacija.</p>
         @endif
     </div>
 </div>
@@ -222,6 +222,54 @@
     .thumb-img:hover { opacity: 1; }
     .main-image-container img:hover { transform: scale(1.5); }
     .main-image-container { position: relative; }
+
+    /* Tehničke specifikacije — dark accordion */
+    .product-specs-accordion .accordion-item {
+        background: transparent;
+        border: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+        margin-bottom: 0.5rem;
+    }
+    .product-specs-accordion .accordion-button {
+        background-color: #121212;
+        color: #fff;
+        font-weight: 700;
+        font-size: 0.95rem;
+        padding: 0.9rem 1.25rem;
+        border-radius: 6px !important;
+        box-shadow: none;
+    }
+    .product-specs-accordion .accordion-button:not(.collapsed) {
+        background-color: #1a1a1a;
+        color: #fff;
+        box-shadow: none;
+    }
+    .product-specs-accordion .accordion-button::after {
+        filter: brightness(0) invert(1);
+        opacity: 0.7;
+    }
+    .product-specs-accordion .accordion-button:focus {
+        box-shadow: 0 0 0 0.15rem rgba(var(--bs-primary-rgb), 0.35);
+        border-color: transparent;
+    }
+    .product-specs-accordion .accordion-body {
+        background: #f8f9fa;
+        border-radius: 0 0 6px 6px;
+        overflow: hidden;
+    }
+    .product-specs-table .spec-label {
+        background-color: #eef0f3;
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: #333;
+    }
+    .product-specs-table .spec-value {
+        font-size: 0.9rem;
+        color: #444;
+    }
+    .product-specs-table tr + tr {
+        border-top: 1px solid rgba(0, 0, 0, 0.06);
+    }
 </style>
 @endpush
 

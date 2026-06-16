@@ -10,6 +10,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ShopController;
+use App\Http\Controllers\PCBuilderController;
+use App\Http\Controllers\BuilderProductController;
 
 Auth::routes();
 Route::get('/news/{slug}', [NewsController::class, 'show'])->name('news.show');
@@ -18,6 +20,8 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/search', [ProductController::class, 'search'])->name('products.search');
 Route::get('/komponente', [ShopController::class, 'components'])->name('shop.components');
 Route::get('/gotove-konfiguracije', [ShopController::class, 'prebuilts'])->name('shop.prebuilts');
+Route::get('/pc-builder', [PCBuilderController::class, 'index'])->name('builder.index');
+Route::get('/api/builder/components/{type}', [PCBuilderController::class, 'getComponents'])->name('builder.components');
 
 
 Route::middleware(['auth'])->group(function () {
@@ -44,6 +48,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     
     Route::delete('/product/{product}', [ProductController::class, 'destroy'])->name('product.destroy');
     Route::resource('product', ProductController::class)->except(['show']);
+    Route::resource('builder-products', BuilderProductController::class)->except(['show']);
 });
 
 Route::get('/product/{slug}', [ProductController::class, 'show'])->name('product.show');

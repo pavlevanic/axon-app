@@ -6,8 +6,30 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Admin Panel</title>
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-    
 
+    <style>
+        .admin-sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        .admin-sidebar-nav .nav-link {
+            text-decoration: none !important;
+            padding: 0.65rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            color: #212529;
+            transition: background-color 0.15s, color 0.15s;
+        }
+        .admin-sidebar-nav .nav-link:hover {
+            background-color: rgba(var(--bs-primary-rgb), 0.08);
+            color: var(--bs-primary) !important;
+        }
+        .admin-sidebar-nav .nav-link.active {
+            background-color: var(--bs-primary);
+            color: #fff !important;
+        }
+    </style>
 </head>
 <body>
     <div id="app">
@@ -19,20 +41,28 @@
                     <div class="card border-0 shadow-sm mb-4">
                         <div class="card-body">
                             <h5 class="fw-bold mb-3">Admin Meni</h5>
-                            <div class="list-group list-group-flush">
-                                <a href="{{ route('admin.index') }}" class="list-group-item list-group-item-action {{ Request::is('admin') ? 'bg-primary text-white' : '' }}">
-                                  Dashboard
+                            <nav class="nav nav-pills flex-column admin-sidebar-nav">
+                                <a href="{{ route('admin.index') }}"
+                                   class="nav-link {{ Request::is('admin') && !Request::is('admin/*') ? 'active' : '' }}">
+                                    Dashboard
                                 </a>
-                                <a href="{{ route('product.index') }}" class="list-group-item list-group-item-action {{ Request::is('product*') ? 'bg-primary text-white' : '' }}">
-                                  Upravljaj Proizvodima
+                                <a href="{{ route('product.index') }}"
+                                   class="nav-link {{ Request::is('product*') ? 'active' : '' }}">
+                                    Upravljaj Proizvodima
                                 </a>
-                                <a href="{{ route('category.index') }}" class="list-group-item list-group-item-action {{ Request::is('category*') ? 'bg-primary text-white' : '' }}">
-                                  Kategorije
+                                <a href="{{ route('category.index') }}"
+                                   class="nav-link {{ Request::is('category*') ? 'active' : '' }}">
+                                    Kategorije
                                 </a>
-                                <a href="{{ route('news.index') }}" class="list-group-item list-group-item-action {{ Route::is('news*') ? 'bg-primary text-white' : '' }}">
-                                   Vesti
+                                <a href="{{ route('news.index') }}"
+                                   class="nav-link {{ Route::is('news*') ? 'active' : '' }}">
+                                    Vesti
                                 </a>
-                            </div>
+                                <a href="{{ route('builder-products.index') }}"
+                                   class="nav-link {{ Route::is('builder-products*') ? 'active' : '' }}">
+                                    PC Builder Komponente
+                                </a>
+                            </nav>
                         </div>
                     </div>
                 </div>
@@ -44,5 +74,6 @@
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+    @stack('scripts')
 </body>
 </html>

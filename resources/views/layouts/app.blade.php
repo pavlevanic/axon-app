@@ -74,7 +74,7 @@
             @yield('content')
 
             <footer class="bg-dark text-white pt-0 border-top border-secondary">
-                <button onclick="scrollToTop()" class="btn btn-primary w-100 rounded-0 py-3 fw-bold text-uppercase border-0" style="letter-spacing: 2px; font-size: 0.8rem;">
+                <button id="back-to-top-btn" onclick="scrollToTop()" class="btn btn-primary w-100 rounded-0 py-3 fw-bold text-uppercase border-0" style="letter-spacing: 2px; font-size: 0.8rem;">
                     <i class="bi bi-arrow-up me-2"></i> Povratak na vrh
                 </button>
             
@@ -127,6 +127,6 @@
         </main>
     </div>
 
-    @stack('scripts')
+    @stack('scripts') 
 </body>
 </html>
