@@ -530,7 +530,7 @@
                     <div class="summary-price">€${fmt(comp.price)}</div>
                 </div>
                 <div class="summary-edit-col">
-                    <button class="btn btn-outline-secondary btn-summary-edit"
+                    <button class="btn btn-outline- btn-summary-edit"
                             onclick="axonGoToStep(${STEPS_ORDER.indexOf(key)})">
                         Izmeni
                     </button>

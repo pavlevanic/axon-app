@@ -11,16 +11,40 @@ use Intervention\Image\ImageManager;
 
 class BuilderProductController extends Controller
 {
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
-        $products = BuilderProduct::select(['id', 'name', 'slug', 'brand', 'component_type', 'price', 'discount_price', 'image', 'is_active'])
-        ->orderBy('component_type')
-        ->orderBy('name')
-        ->paginate(20);
+        $allowedSorts = ['name', 'component_type', 'brand', 'price', 'perf_score', 'tdmark_base', 'fps_base_1080'];
+    
+        $sort = $request->get('sort');
+        $direction = $request->get('direction', 'asc') === 'desc' ? 'desc' : 'asc';
+
+        $query = BuilderProduct::select([
+        'id', 
+        'name', 
+        'slug', 
+        'brand', 
+        'component_type', 
+        'price', 
+        'discount_price', 
+        'image', 
+        'is_active',
+        'perf_score',
+        'tdmark_base',
+        'fps_base_1080'
+        ]);
+
+        if ($sort && in_array($sort, $allowedSorts)) {
+        $query->orderBy($sort, $direction);
+        } 
+        else {
+        $query->orderBy('component_type', 'asc')->orderBy('name', 'asc');
+        }
+
+        $products = $query->paginate(20)->appends($request->all());
 
         $componentTypes = BuilderProduct::componentTypes();
 
-        return view('admin.builder-products.index', compact('products', 'componentTypes'));
+        return view('admin.builder-products.index', compact('products', 'componentTypes', 'sort', 'direction'));
     }
 
     public function create()
@@ -98,7 +122,7 @@ class BuilderProductController extends Controller
             'perf_score'         => 'nullable|integer|min:0|max:1000',
             'tdmark_base'        => 'nullable|integer|min:0',
             'fps_base_1080'      => 'nullable|integer|min:0',
-            'image'              => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'image'              => 'nullable|image|mimes:jpeg,png,jpg,webp,avif|max:2048',
             'spec_socket'        => 'nullable|string|max:50',
             'spec_tdp'           => 'nullable|integer|min:0',
             'spec_wattage'       => 'nullable|integer|min:0',

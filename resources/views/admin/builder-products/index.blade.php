@@ -25,14 +25,43 @@
                 <table class="table table-hover align-middle mb-0">
                     <thead class="bg-light">
                         <tr>
-                            <th class="ps-4">Naziv</th>
-                            <th>Tip</th>
-                            <th>Brend</th>
+                            <th class="ps-4">
+                                <a href="{{ route('builder-products.index', ['sort' => 'name', 'direction' => ($sort === 'name' && $direction === 'asc') ? 'desc' : 'asc']) }}" class="text-decoration-none text-dark d-flex align-items-center">
+                                    Naziv
+                                    @if($sort === 'name')
+                                        <i class="bi bi-sort-alpha-{{ $direction === 'asc' ? 'down' : 'up' }} ms-1 text-primary"></i>
+                                    @else
+                                        <i class="bi bi-arrow-down-up ms-1 text-muted small" style="font-size: 0.75rem;"></i>
+                                    @endif
+                                </a>
+                            </th>
+                            
+                            <th>
+                                <a href="{{ route('builder-products.index', ['sort' => 'component_type', 'direction' => ($sort === 'component_type' && $direction === 'asc') ? 'desc' : 'asc']) }}" class="text-decoration-none text-dark d-flex align-items-center">
+                                    Tip
+                                    @if($sort === 'component_type')
+                                        <i class="bi bi-sort-down{{ $direction === 'desc' ? '-alt' : '' }} ms-1 text-primary"></i>
+                                    @else
+                                        <i class="bi bi-arrow-down-up ms-1 text-muted small" style="font-size: 0.75rem;"></i>
+                                    @endif
+                                </a>
+                            </th>
+                            
+                            <th>
+                                <a href="{{ route('builder-products.index', ['sort' => 'brand', 'direction' => ($sort === 'brand' && $direction === 'asc') ? 'desc' : 'asc']) }}" class="text-decoration-none text-dark d-flex align-items-center">
+                                    Brend
+                                    @if($sort === 'brand')
+                                        <i class="bi bi-sort-alpha-{{ $direction === 'asc' ? 'down' : 'up' }} ms-1 text-primary"></i>
+                                    @else
+                                        <i class="bi bi-arrow-down-up ms-1 text-muted small" style="font-size: 0.75rem;"></i>
+                                    @endif
+                                </a>
+                            </th>
+                            
                             <th>Cena</th>
                             <th>Perf.</th>
                             <th>3DMark</th>
                             <th>FPS 1080p</th>
-                            <th>Status</th>
                             <th class="text-end pe-4">Akcije</th>
                         </tr>
                     </thead>
@@ -41,9 +70,6 @@
                             <tr>
                                 <td class="ps-4">
                                     <div class="fw-bold text-dark">{{ $item->name }}</div>
-                                    @if($item->short_desc)
-                                        <small class="text-muted">{{ Str::limit($item->short_desc, 60) }}</small>
-                                    @endif
                                 </td>
                                 <td>
                                     <span class="badge bg-secondary text-uppercase" style="font-size: 0.7rem;">
@@ -62,15 +88,7 @@
                                 <td>{{ $item->perf_score ?: '—' }}</td>
                                 <td>{{ $item->tdmark_base ?: '—' }}</td>
                                 <td>{{ $item->fps_base_1080 ?: '—' }}</td>
-                                <td>
-                                    @if($item->is_active && $item->in_stock)
-                                        <span class="text-success"><i class="bi bi-check-circle-fill"></i> Aktivno</span>
-                                    @elseif($item->is_active)
-                                        <span class="text-warning"><i class="bi bi-exclamation-circle-fill"></i> Nema na stanju</span>
-                                    @else
-                                        <span class="text-danger"><i class="bi bi-x-circle-fill"></i> Neaktivno</span>
-                                    @endif
-                                </td>
+                                
                                 <td class="text-end pe-4">
                                     <div class="btn-group">
                                         <a href="{{ route('builder-products.edit', $item) }}" class="btn btn-outline-primary btn-sm">
@@ -88,7 +106,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="9" class="text-center py-5 text-muted">
+                                <td colspan="8" class="text-center py-5 text-muted">
                                     Nema komponenti. <a href="{{ route('builder-products.create') }}">Dodaj prvu komponentu.</a>
                                 </td>
                             </tr>

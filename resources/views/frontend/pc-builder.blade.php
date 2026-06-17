@@ -160,7 +160,7 @@ body { background: var(--builder-bg) !important; }
 .product-link-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 4px; text-decoration: none; text-transform: uppercase; transition: opacity 0.15s; }
 .product-link-badge:hover { opacity: 0.8; }
 .badge-axon   { background: rgba(var(--bs-primary-rgb),0.15); color: var(--bs-primary); border: 1px solid rgba(var(--bs-primary-rgb),0.25); }
-.badge-amazon { background: rgba(255,153,0,0.12); color: #ff9900; border: 1px solid rgba(255,153,0,0.25); }
+.badge-amazon { background: rgb(124, 58, 237); color: #ffffff;  }
 .product-price-col { display: flex; flex-direction: column; align-items: flex-end; padding: 10px 14px; flex-shrink: 0; min-width: 110px; border-left: 1px solid var(--builder-border); }
 .product-price { font-size: 15px; font-weight: 800; color: var(--builder-text); letter-spacing: -0.02em; margin-bottom: 6px; }
 .product-price-orig { font-size: 11px; color: var(--builder-muted); text-decoration: line-through; margin-bottom: 2px; }

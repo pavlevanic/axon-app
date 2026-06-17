@@ -231,8 +231,8 @@
         margin-bottom: 0.5rem;
     }
     .product-specs-accordion .accordion-button {
-        background-color: #121212;
-        color: #fff;
+        background-color: #ffffff;
+        color: #000000;
         font-weight: 700;
         font-size: 0.95rem;
         padding: 0.9rem 1.25rem;
@@ -240,8 +240,8 @@
         box-shadow: none;
     }
     .product-specs-accordion .accordion-button:not(.collapsed) {
-        background-color: #1a1a1a;
-        color: #fff;
+        background-color: #ffffff;
+        color: #000000;
         box-shadow: none;
     }
     .product-specs-accordion .accordion-button::after {

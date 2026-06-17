@@ -8,15 +8,16 @@
         </div>
         <div class="card-body">
             @if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
-            <form action="{{ route('product.update', $product->id) }}" method="POST" enctype="multipart/form-data">
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <form action="{{ route('product.update', $product->id) }}" method="POST" enctype="multipart/form-data" id="axonProductForm">
                 @csrf
                 @method('PUT')
 
@@ -39,11 +40,11 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Glavni Sadržaj</label>
+                            <label class="form-label fw-bold">Glavni Opis Proizvoda</label>
                             
-                            <div id="axon-pell-editor"></div>
+                            <div id="axon-pell-editor" class="border rounded bg-white"></div>
                             
-                            <textarea name="content" id="axon-pell-textarea" hidden>{{ old('content', $news->content ?? $product->content ?? '') }}</textarea>
+                            <textarea name="desc" id="axon-pell-textarea" style="width:100%; height:200px; font-family:monospace;" hidden>{{ old('desc', $product->desc) }}</textarea>
                             
                             <div class="text-center">
                                 <button type="button" id="axon-source-btn" class="btn btn-outline-dark mb-2 text-center mt-2">
@@ -108,10 +109,10 @@
                                     <div class="row g-2">
                                         @foreach($product->images as $img)
                                         <div class="col-4">
-                                            <label class="d-block border p-1 rounded cursor-pointer">
+                                            <label class="d-block border p-1 rounded cursor-pointer text-center">
                                                 <input type="radio" name="main_image_path" value="{{ $img->image_path }}" 
                                                        {{ $product->image == $img->image_path ? 'checked' : '' }}>
-                                                <img src="{{ asset($img->image_path) }}" class="img-fluid rounded">
+                                                <img src="{{ asset($img->image_path) }}" class="img-fluid rounded mt-1 d-block mx-auto">
                                             </label>
                                         </div>
                                         @endforeach
@@ -129,59 +130,46 @@
                     <input type="file" name="images[]" class="form-control" multiple>
                     
                     <div class="mt-3 row g-3">
-                        <label class="d-block fw-bold mb-2">Trenutna galerija (Klikni na X za brisanje slike):</label>
+                        <label class="d-block fw-bold mb-0">Trenutna galerija (Klikni na X za brisanje slike):</label>
                         @foreach($product->images as $img)
-                 <div class="col-md-2 position-relative text-center image-container" id="image-{{ $img->id }}">
-                  <img src="{{ asset($img->image_path) }}" class="img-thumbnail" style="height: 100px; width: 100%; object-fit: cover;">
-    
-                 <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1 delete-image" data-id="{{ $img->id }}" title="Obriši sliku">
-                   <i class="bi bi-x"></i>
-                </button>
-                 </div>
-                @endforeach
+                            <div class="col-md-2 position-relative text-center image-container" id="image-{{ $img->id }}">
+                                <img src="{{ asset($img->image_path) }}" class="img-thumbnail" style="height: 100px; width: 100%; object-fit: cover;">
+                                <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1 delete-image" data-id="{{ $img->id }}" title="Obriši sliku">
+                                    <i class="bi bi-x"></i>
+                                </button>
+                            </div>
+                        @endforeach
                     </div>
                 </div>
-                <div class="card mt-4">
+
+                <div class="card mt-4 mb-4">
                     <div class="card-header bg-dark text-white">
                         <h6 class="mb-0">Tehničke Specifikacije (Kategorija: {{ $product->category->name }})</h6>
                     </div>
                     <div class="card-body">
                         @if($product->category->attribute_groups && count($product->category->attribute_groups) > 0)
-                            
                             @foreach($product->category->attribute_groups as $groupName => $attributes)
                                 <div class="group-section mb-4">
                                     <h7 class="fw-bold text-primary border-bottom d-block pb-1 mb-3">
                                         <i class="bi bi-gear-fill me-1"></i> {{ $groupName }}
                                     </h7>
-                                    
                                     <div class="row">
                                         @foreach($attributes as $attr)
-                                            @php
-                                                $specKey = $groupName . '_' . $attr;
-                                            @endphp
+                                            @php $specKey = $groupName . '_' . $attr; @endphp
                                             <div class="col-md-6 mb-3">
                                                 <label class="form-label small">{{ $attr }}</label>
-                                                <input type="text" 
-                                                       name="specs[{{ $specKey }}]" 
-                                                       value="{{ $product->specs[$specKey] ?? ($product->specs[$attr] ?? '') }}" 
-                                                       class="form-control form-control-sm" 
-                                                       placeholder="Unesi {{ strtolower($attr) }}...">
+                                                <input type="text" name="specs[{{ $specKey }}]" value="{{ $product->specs[$specKey] ?? ($product->specs[$attr] ?? '') }}" class="form-control form-control-sm" placeholder="Unesi {{ strtolower($attr) }}...">
                                             </div>
                                         @endforeach
                                     </div>
                                 </div>
                             @endforeach
-                    
                         @elseif($product->category->attribute_names)
                             <div class="row">
                                 @foreach($product->category->attribute_names as $attr)
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">{{ $attr }}</label>
-                                        <input type="text" 
-                                               name="specs[{{ $attr }}]" 
-                                               value="{{ $product->specs[$attr] ?? '' }}" 
-                                               class="form-control" 
-                                               placeholder="Unesi {{ strtolower($attr) }}...">
+                                        <input type="text" name="specs[{{ $attr }}]" value="{{ $product->specs[$attr] ?? '' }}" class="form-control" placeholder="Unesi {{ strtolower($attr) }}...">
                                     </div>
                                 @endforeach
                             </div>
@@ -190,6 +178,7 @@
                         @endif
                     </div>
                 </div>
+
                 <div class="text-end">
                     <a href="{{ route('product.index') }}" class="btn btn-light border">Odustani</a>
                     <button type="submit" class="btn btn-dark px-4">Sačuvaj izmene</button>
@@ -199,66 +188,22 @@
     </div>
 </div>
 
-<div class="modal fade" id="sourceModal" tabindex="-1">
-    <div class="modal-dialog modal-xl">
-      <div class="modal-content">
-  
-        <div class="modal-header">
-          <h5 class="modal-title">HTML Source Editor</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-  
-        <div class="modal-body">
-          <textarea id="htmlSource" style="width:100%;height:500px;font-family:monospace;"></textarea>
-        </div>
-  
-        <div class="modal-footer">
-          <button class="btn btn-outline-danger" data-bs-dismiss="modal">Nazad</button>
-          <button class="btn btn-primary" onclick="applySource()">Potvrdi</button>
-        </div>
-  
-      </div>
-    </div>
-  </div>
-  <script>
-    let sourceModal;
-
-document.addEventListener('DOMContentLoaded', function () {
-    sourceModal = new bootstrap.Modal(document.getElementById('sourceModal'));
-});
-
-function openSourceEditor() {
-    const html = window.editor.getData();
-
-    document.getElementById('htmlSource').value = html;
-
-    sourceModal.show();
-}
-
-function applySource() {
-    const html = document.getElementById('htmlSource').value;
-
-    window.editor.setData(html);
-
-    sourceModal.hide();
-}
-  </script>
-<script>
-    document.getElementById('newsForm').addEventListener('submit', function () {
-    document.getElementById('content').value = window.editor.getData();
-});
-</script>
+<style>
+    .source-editor-active {
+        display: block !important;
+        background: #212529;
+        color: #00ff66;
+        padding: 15px;
+        border-radius: 4px;
+    }
+</style>
 
 <script>
-    
     document.getElementById('isFeatured').addEventListener('change', function() {
         const section = document.getElementById('featuredImageSection');
-        if(this.checked) {
-            section.classList.remove('d-none');
-        } else {
-            section.classList.add('d-none');
-        }
+        section.classList.toggle('d-none', !this.checked);
     });
+
     document.querySelectorAll('.delete-image').forEach(button => {
         button.addEventListener('click', function() {
             const imageId = this.getAttribute('data-id');
