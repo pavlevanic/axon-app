@@ -24,7 +24,9 @@ class HomeController extends Controller
                     ->take(4)
                     ->get();
 
-        $categories = Category::where('id', '!=', 1)->take(4)->get();
+        $categories = Category::where('id', '!=',1)
+        ->where('id', '!=', 7)
+        ->take(4)->get();
 
         return view('welcome', compact('heroNews','products','categories'));
     }

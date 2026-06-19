@@ -10,7 +10,7 @@ class ShopController extends Controller
 {
     public function components(Request $request)
     {
-        $categories = Category::where('id', '!=', 1)->get();
+        $categories = Category::where('id', '!=', 1)->where('id','!=',7)->get();
 
         if (!$request->has('category')) {
             $products  = collect();
@@ -20,7 +20,7 @@ class ShopController extends Controller
         }
 
         $query = Product::query()->whereHas('category', function ($q) {
-            $q->where('id', '!=', 1);
+            $q->where('id', '!=', 1)->where('id','!=',7);
         });
 
         $query->whereHas('category', function ($q) use ($request) {

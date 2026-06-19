@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Str;
+use App\Models\Product;
+use App\Models\Cart;
+use App\Models\Category;
 use App\Models\BuilderProduct;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -63,6 +67,64 @@ class PCBuilderController extends Controller
         ]);
     }
 
+    public function addBuildToCart(Request $request)
+{
+    $request->validate([
+        'component_ids'   => 'required|array|min:1',
+        'component_ids.*' => 'integer|exists:builder_products,id',
+    ]);
+
+    $components = BuilderProduct::whereIn('id', $request->component_ids)->get();
+
+    if ($components->isEmpty()) {
+        return back()->with('error', 'Build je prazan.');
+    }
+
+    $totalPrice = $components->sum(fn ($c) => $c->effective_price);
+
+    $componentSnapshot = $components->map(fn ($c) => [
+        'id'    => $c->id,
+        'name'  => $c->name,
+        'type'  => $c->component_type,
+        'price' => $c->effective_price,
+        'image' => $c->image,
+    ])->values()->toArray();
+
+    $buildName = 'Custom PC Build #' . strtoupper(Str::random(6));
+
+    $caseImage = $components->firstWhere('component_type', 'case')?->image;
+
+    $product = Product::create([
+        'name'             => $buildName,
+        'slug'             => Str::slug($buildName) . '-' . uniqid(),
+        'short_desc'       => 'Konfigurisan PC sastavljen putem PC Builder-a',
+        'desc'             => $this->buildDescriptionFromComponents($components),
+        'price'            => $totalPrice,
+        'discount_price'   => 0,
+        'stock'            => 1,
+        'is_featured'      => false,
+        'is_custom_build'  => true,
+        'image'            => $caseImage,
+        'category_id'      => Category::where('slug', 'custom-build')->value('id'),
+        'specs'            => null,
+        'build_components' => $componentSnapshot,
+        'created_by'       => auth()->id(),
+        'updated_by'       => auth()->id(),
+    ]);
+
+    Cart::create([
+        'user_id'    => auth()->id(),
+        'product_id' => $product->id,
+        'quantity'   => 1,
+    ]);
+
+    return redirect()->route('cart.index')->with('status', 'Build je dodat u korpu!');
+}
+private function buildDescriptionFromComponents($components): string
+{
+    $lines = $components->map(fn ($c) => '- ' . $c->name . ' (' . $c->component_type . ')');
+    return "Konfigurisan PC build:\n" . $lines->implode("\n");
+}
  
     public function saveBuild(Request $request): JsonResponse
     {

@@ -13,11 +13,14 @@ class Product extends Model
     protected $fillable = [
         'name', 'slug', 'short_desc', 'desc', 'price', 
         'discount_price', 'stock', 'is_featured', 
-        'image', 'category_id', 'created_by', 'updated_by', 'specs'
+        'image', 'category_id', 'created_by', 'updated_by', 
+        'specs','is_custom_build', 'build_components'
     ];
 
     protected $casts = [
         'specs' => 'array',
+        'build_components' => 'array',
+        'is_custom_build'  => 'boolean',
     ];
     
     public function getRouteKeyName() {

@@ -73,7 +73,7 @@
                     }
                     $isOutOfStock = $product->stock <= 0;
               @endphp
-                <div class="col-6 col-md-4 col-lg-3">
+                <div class="col-12 col-md-4 col-lg-3">
                     @php $isOutOfStock = $product->stock <= 0; @endphp
                     
                     <div class="card h-100 border-0 shadow-sm product-card transition ">
@@ -172,7 +172,7 @@
         
                 <div class="row g-4">
                     @foreach($categories as $category)
-                    <div class="col-6 col-md-4 col-lg-3">
+                    <div class="col-12 col-md-4 col-lg-3">
                         <a href="{{ route('shop.components', ['category' => $category->slug]) }}" class="text-decoration-none">
                             <div class="card h-100 border-0 shadow-sm hover-lift">
                                 <div class="position-relative overflow-hidden">

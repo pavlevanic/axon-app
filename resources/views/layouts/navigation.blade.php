@@ -32,7 +32,7 @@
     </div>
     @endif
 
-    @php $navCategories = \App\Models\Category::where('id', '!=', 1)->get(); @endphp
+    @php $navCategories = \App\Models\Category::where('id', '!=', 1)->where('id','!=',7)->get(); @endphp
 
     <nav class="navbar navbar-expand-md navbar-dark bg-dark py-2">
         <div class="container">
@@ -59,7 +59,7 @@
                     {{-- Komponente hover dropdown --}}
                     <li class="nav-item nav-dropdown-hover">
                         <a class="nav-link fw-semibold text-white text-uppercase small px-3" href="{{ route('shop.components') }}">
-                            Komponente 🡻
+                            Komponente
                         </a>
                         <ul class="nav-dropdown-menu">
                             @foreach($navCategories as $cat)
@@ -84,7 +84,7 @@
                     @auth
                         @php $cartCount = \App\Models\Cart::where('user_id', auth()->id())->sum('quantity'); @endphp
                         <li class="nav-item">
-                            <a href="{{ route('cart.index') }}" class="nav-link text-white position-relative px-3">
+                            <a href="{{ route('cart.index') }}" class="nav-link text-white position-relative px-3" aria-label="Korpa">
                                 <i class="bi bi-bag fs-5"></i>
                                 @if($cartCount > 0)
                                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
@@ -96,7 +96,7 @@
 
                         @if(auth()->user()->is_admin)
                             <li class="nav-item">
-                                <a class="nav-link text-primary small fw-bold text-uppercase px-3" href="/admin">Admin</a>
+                                <a class="nav-link text-white small fw-bold text-uppercase px-3" href="/admin">Admin</a>
                             </li>
                         @endif
                     @endauth

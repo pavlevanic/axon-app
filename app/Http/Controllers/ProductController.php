@@ -37,29 +37,45 @@ class ProductController extends Controller
     }
 
     public function store(StoreProductRequest $request)
-    {
-        $product = Product::create($request->validated() + [
-            'created_by' => Auth::id(),
-            'updated_by' => Auth::id()
-        ]);
+{
+    $validatedData = $request->validated();
 
-        if ($request->hasFile('images')) {
-            $manager = new ImageManager(new Driver());
-            $folderPath = 'storage/products/' . $product->slug;
+    if (isset($validatedData['images'])) {
+        unset($validatedData['images']);
+    }
 
-            if (!File::exists(public_path($folderPath))) {
-                File::makeDirectory(public_path($folderPath), 0755, true);
-            }
+    $specs = $request->input('specs', []);
 
-            foreach ($request->file('images') as $key => $file) {
-                $filename = time() . '_' . $key . '.webp';
-                $fullPath = public_path($folderPath . '/' . $filename);
+    $product = Product::create(array_merge($validatedData, [
+        'specs'      => $specs,
+        'created_by' => Auth::id(),
+        'updated_by' => Auth::id()
+    ]));
 
-                $image = $manager->read($file->getPathname());
-                $image->scale(height: 1200)->toWebp(80)->save($fullPath);
-                
-                $db_path = $folderPath . '/' . $filename;
+    if ($request->hasFile('images')) {
+        $manager = new ImageManager(new Driver());
+        $folderPath = 'storage/products/' . $product->slug;
 
+        if (!File::exists(public_path($folderPath))) {
+            File::makeDirectory(public_path($folderPath), 0755, true);
+        }
+
+        $mainImagePath = null;
+        
+        $files = array_values($request->file('images'));
+
+        foreach ($files as $key => $file) {
+            $filename = time() . '_' . $key . '.webp';
+            $fullPath = public_path($folderPath . '/' . $filename);
+
+            $image = $manager->read($file->getPathname());
+            $image->scale(height: 1200)->toWebp(80)->save($fullPath);
+            
+            $db_path = $folderPath . '/' . $filename;
+
+            if ($key === 0) {
+                $mainImagePath = $db_path;
+            } else {
                 $product->images()->create([
                     'image_path' => $db_path,
                     'position'   => $key
@@ -67,8 +83,14 @@ class ProductController extends Controller
             }
         }
 
-        return redirect()->route('product.index')->with('status', 'Uspešno dodato više slika!');
+        if ($mainImagePath) {
+            $product->image = $mainImagePath;
+            $product->save(); 
+        }
     }
+
+    return redirect()->route('product.index')->with('status', 'AXON proizvod uspešno kreiran!');
+}
 
     public function edit($id)
     {
@@ -79,83 +101,94 @@ class ProductController extends Controller
     }
 
     public function update(Request $request, $id)
-    {
-        $product = Product::findOrFail($id);
+{
+    $product = Product::findOrFail($id);
 
-        $validated = $request->validate([
-            'name' => "required|min:3",
-            'short_desc' => 'nullable|max:255',
-            'desc' => 'required',
-            'slug' => 'required|unique:products,slug,' . $id,
-            'price' => 'required|numeric',
-            'discount_price' => 'nullable|numeric|lt:price', 
-            'stock' => 'required|integer',
-            'status' => 'required|in:draft,published,archive',
-            'images.*' => 'nullable|image|mimes:png,jpg,webp|max:2048',
-            'category_id' => 'required|exists:categories,id',
-            'specs' => 'nullable|array'
-        ]);
+    $validated = $request->validate([
+        'name' => "required|min:3",
+        'short_desc' => 'nullable|max:255',
+        'desc' => 'required',
+        'slug' => 'required|unique:products,slug,' . $id,
+        'price' => 'required|numeric',
+        'discount_price' => 'nullable|numeric|lt:price', 
+        'stock' => 'required|integer',
+        'status' => 'required|in:draft,published,archive',
+        'images.*' => 'nullable|image|mimes:png,jpg,webp|max:2048',
+        'category_id' => 'required|exists:categories,id',
+        'specs' => 'nullable|array' 
+    ]);
 
-        $oldSlug = $product->slug;
-        $newSlug = $validated['slug'];
+    if (isset($validated['images'])) {
+        unset($validated['images']);
+    }
 
-        // REŠENJE ZA SLUG BAG: Ako se slug promenio, preimenuj folder na disku i ažuriraj bazu
-        if ($oldSlug !== $newSlug) {
-            $oldFolder = 'storage/products/' . $oldSlug;
-            $newFolder = 'storage/products/' . $newSlug;
+    $oldSlug = $product->slug;
+    $newSlug = $validated['slug'];
 
-            if (File::exists(public_path($oldFolder))) {
-                File::move(public_path($oldFolder), public_path($newFolder));
-                
-                // Osveži putanje svih postojećih slika ovog proizvoda u bazi podataka
-                foreach ($product->images as $img) {
-                    $updatedPath = str_replace($oldFolder, $newFolder, $img->image_path);
-                    $img->update(['image_path' => $updatedPath]);
-                }
-            }
+    if ($oldSlug !== $newSlug) {
+        $oldFolder = 'storage/products/' . $oldSlug;
+        $newFolder = 'storage/products/' . $newSlug;
+
+        if (File::exists(public_path($oldFolder))) {
+            File::move(public_path($oldFolder), public_path($newFolder));
             
-            // Ako je glavna slika proizvoda koristila staru putanju, osveži je
-            if ($product->image) {
-                $product->image = str_replace($oldFolder, $newFolder, $product->image);
+            foreach ($product->images as $img) {
+                $updatedPath = str_replace($oldFolder, $newFolder, $img->image_path);
+                $img->update(['image_path' => $updatedPath]);
             }
         }
+        
+        if ($product->image) {
+            $product->image = str_replace($oldFolder, $newFolder, $product->image);
+        }
+    }
 
-        $isFeatured = $request->has('is_featured') ? 1 : 0;
-        $mainImage = $request->get('main_image_path', $product->image);
+    $isFeatured = $request->has('is_featured') ? 1 : 0;
+    
+    $mainImage = $request->get('main_image_path', $product->image);
 
-        $product->update(array_merge($validated, [
-            'is_featured' => $isFeatured,
-            'image' => $mainImage, 
-            'updated_by' => Auth::id()
-        ]));
+    if ($request->hasFile('images')) {
+        $manager = new ImageManager(new Driver());
+        $folderPath = 'storage/products/' . $newSlug;
 
-        // Upload novih slika (koristi novi/aktuelni slug)
-        if ($request->hasFile('images')) {
-            $manager = new ImageManager(new Driver());
-            $folderPath = 'storage/products/' . $newSlug;
+        if (!File::exists(public_path($folderPath))) {
+            File::makeDirectory(public_path($folderPath), 0755, true);
+        }
 
-            if (!File::exists(public_path($folderPath))) {
-                File::makeDirectory(public_path($folderPath), 0755, true);
-            }
+        $newFiles = array_values($request->file('images'));
 
-            foreach ($request->file('images') as $key => $file) {
-                $image = $manager->read($file->getPathname());
-                $image->scale(height: 1200); 
-                
-                $filename = time() . '_extra_' . $key . '.webp'; 
-                $fullPath = public_path($folderPath . '/' . $filename);
-                
-                $image->toWebp(80)->save($fullPath);
-                
+        foreach ($newFiles as $key => $file) {
+            $image = $manager->read($file->getPathname());
+            $image->scale(height: 1200); 
+            
+            $filename = time() . '_extra_' . $key . '.webp'; 
+            $fullPath = public_path($folderPath . '/' . $filename);
+            
+            $image->toWebp(80)->save($fullPath);
+            $db_path = $folderPath . '/' . $filename;
+            
+            if (empty($mainImage) && $key === 0) {
+                $mainImage = $db_path;
+            } else {
                 $product->images()->create([
-                    'image_path' => $folderPath . '/' . $filename,
+                    'image_path' => $db_path,
                     'position'   => $key
                 ]);
             }
         }
-
-        return redirect()->route('product.index')->with('status', 'AXON proizvod uspešno ažuriran!');
     }
+
+    $specs = $request->input('specs', []);
+
+    $product->update(array_merge($validated, [
+        'specs'       => $specs, 
+        'is_featured' => $isFeatured,
+        'image'       => $mainImage, 
+        'updated_by'  => Auth::id()
+    ]));
+
+    return redirect()->route('product.index')->with('status', 'AXON proizvod uspešno ažuriran!');
+}
 
     public function search(Request $request)
     {
@@ -168,7 +201,7 @@ class ProductController extends Controller
                   ->orWhere('desc', 'LIKE', "%{$query}%");
             })
             ->paginate(12)
-            ->withQueryString(); // Čuva pojam za pretragu kroz stranice paginacije
+            ->withQueryString();
 
         return view('product.search-results', compact('products', 'query'));
     }

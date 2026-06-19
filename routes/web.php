@@ -29,6 +29,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/cart/add/{id}', [CartController::class, 'addToCart'])->name('cart.add');
     Route::patch('/cart/{id}', [CartController::class, 'update'])->name('cart.update');
     Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
+    Route::post('/pc-builder/add-to-cart', [PcBuilderController::class, 'addBuildToCart'])->name('builder.add-to-cart');
 });
 
 Route::middleware(['auth', 'admin'])->group(function () {

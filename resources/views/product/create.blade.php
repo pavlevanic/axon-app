@@ -39,14 +39,14 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Glavni Sadržaj</label>
+                            <label class="form-label fw-bold">Glavni Opis Proizvoda</label>
                             
-                            <div id="axon-pell-editor"></div>
+                            <div id="axon-pell-editor" class="border rounded bg-white"></div>
                             
-                            <textarea name="content" id="axon-pell-textarea" hidden>{{ old('content', $news->content ?? $product->content ?? '') }}</textarea>
+                            <textarea name="desc" id="axon-pell-textarea" class="form-control" style="font-family: monospace; min-height: 200px;" hidden>{{ old('desc') }}</textarea>
                             
-                            <div class="text-center">
-                                <button type="button" id="axon-source-btn" class="btn btn-outline-dark mb-2 text-center mt-2">
+                            <div class="text-center mt-2">
+                                <button type="button" id="axon-source-btn" class="btn btn-outline-dark">
                                     Source
                                 </button>
                             </div>
@@ -201,41 +201,43 @@
   </div>
   <script>
     let sourceModal;
-
-document.addEventListener('DOMContentLoaded', function () {
-    sourceModal = new bootstrap.Modal(document.getElementById('sourceModal'));
-});
-
-function openSourceEditor() {
-    const html = window.editor.getData();
-
-    document.getElementById('htmlSource').value = html;
-
-    sourceModal.show();
-}
-
-function applySource() {
-    const html = document.getElementById('htmlSource').value;
-
-    window.editor.setData(html);
-
-    sourceModal.hide();
-}
-  </script>
-<script>
-    document.getElementById('newsForm').addEventListener('submit', function () {
-    document.getElementById('content').value = window.editor.getData();
-});
-</script>
-
-<script>
-    // Automatsko generisanje sluga iz naziva
-    document.getElementById('name').addEventListener('input', function() {
-        let name = this.value;
-        let slug = name.toLowerCase()
-                       .replace(/[^\w ]+/g, '')
-                       .replace(/ +/g, '-');
-        document.getElementById('slug').value = slug;
+    document.addEventListener('DOMContentLoaded', function () {
+        sourceModal = new bootstrap.Modal(document.getElementById('sourceModal'));
+        
     });
-</script>
+    
+    document.getElementById('axon-source-btn').addEventListener('click', function() {
+        const html = document.getElementById('axon-pell-textarea').value;
+        document.getElementById('htmlSource').value = html;
+        sourceModal.show();
+    });
+    
+    function applySource() {
+        const html = document.getElementById('htmlSource').value;
+        
+        document.getElementById('axon-pell-textarea').value = html;
+        const pellContent = document.querySelector('.pell-content');
+        if(pellContent) {
+            pellContent.innerHTML = html;
+        }
+    
+        sourceModal.hide();
+    }
+    
+    document.querySelector('form[action="{{ route("product.store") }}"]').addEventListener('submit', function (e) {
+        const pellContent = document.querySelector('.pell-content');
+        if (pellContent) {
+            document.getElementById('axon-pell-textarea').value = pellContent.innerHTML;
+        }
+    });
+    </script>
+    <script>
+        document.getElementById('name').addEventListener('input', function() {
+            let name = this.value;
+            let slug = name.toLowerCase()
+                           .replace(/[^\w ]+/g, '')
+                           .replace(/ +/g, '-');
+            document.getElementById('slug').value = slug;
+        });
+    </script>
 @endsection

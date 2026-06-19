@@ -76,6 +76,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let isSourceMode = false;
 
+    // Pronalazimo formu u kojoj se editor nalazi
+    const parentForm = txtArea.closest('form');
+
     const script = document.createElement('script');
     script.src = "https://unpkg.com/pell/dist/pell.min.js";
     document.head.appendChild(script);
@@ -113,18 +116,21 @@ document.addEventListener('DOMContentLoaded', function () {
             ]
         });
 
-        if (txtArea.value) {
-            const pellContent = editorDiv.querySelector('.pell-content');
-            if (pellContent) {
-                pellContent.innerHTML = txtArea.value;
-            }
+        // FIX 1: Pouzdaniji način za inicijalno punjenje editora (i za Edit i za Create nakon greške)
+        const pellContent = editorDiv.querySelector('.pell-content');
+        if (txtArea.value && pellContent) {
+            pellContent.innerHTML = txtArea.value;
         }
 
-        sourceBtn.addEventListener('click', function () {
-            const pellContent = editorDiv.querySelector('.pell-content');
+        // FIX 2: Osiguravamo da je textarea sakriven na početku, bez obzira na Laravel old() refreš
+        txtArea.style.display = 'none';
+        txtArea.classList.remove('source-editor-active');
 
+        // Režim izmene izvornog koda (Source)
+        sourceBtn.addEventListener('click', function () {
             if (!isSourceMode) {
-                editorDiv.style.display = 'none';
+                editorDiv.style.style.display = 'none';
+                txtArea.style.display = 'block'; // Prikazujemo textarea
                 txtArea.classList.add('source-editor-active');
                 sourceBtn.textContent = 'Visual Editor';
                 sourceBtn.classList.remove('btn-outline-dark');
@@ -134,6 +140,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (pellContent) {
                     pellContent.innerHTML = txtArea.value;
                 }
+                txtArea.style.display = 'none'; // Ponovo sklanjamo textarea
                 txtArea.classList.remove('source-editor-active');
                 editorDiv.style.display = 'block';
                 sourceBtn.textContent = 'Source';
@@ -142,5 +149,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 isSourceMode = false;
             }
         });
+
+        if (parentForm) {
+            parentForm.addEventListener('submit', function () {
+                if (isSourceMode) {
+                    if (pellContent) pellContent.innerHTML = txtArea.value;
+                } else {
+                    if (pellContent) txtArea.value = pellContent.innerHTML;
+                }
+            });
+        }
     };
 });

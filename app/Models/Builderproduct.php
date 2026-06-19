@@ -140,9 +140,9 @@ class BuilderProduct extends Model
             'perf_score'   => $this->perf_score,
             'tdmark_base'  => $this->tdmark_base,
             'fps_base_1080'=> $this->fps_base_1080,
-            'socket'       => $this->socket,
-            'ram_type'     => $this->ram_type,
-            'form_factor'  => $this->form_factor,
+            'socket'       => $this->specs['socket']      ?? null,
+            'ram_type'     => $this->specs['ram_type']    ?? null,
+            'form_factor'  => $this->specs['form_factor'] ?? null,
             'specs'        => $this->specs,
         ];
     }

@@ -148,6 +148,7 @@ class BuilderProductController extends Controller
             'spec_read_mbs'      => 'nullable|integer|min:0',
             'spec_write_mbs'     => 'nullable|integer|min:0',
             'spec_efficiency'    => 'nullable|string|max:50',
+            'spec_length_mm'     => 'nullable|integer|min:0',
         ]);
 
         $specs = array_filter([
@@ -163,7 +164,6 @@ class BuilderProductController extends Controller
             'capacity_gb' => isset($validated['spec_capacity_gb']) ? (int) $validated['spec_capacity_gb'] : null,
             'speed_mhz'   => isset($validated['spec_speed_mhz']) ? (int) $validated['spec_speed_mhz'] : null,
             'max_mobo'    => $validated['spec_max_mobo'] ?? null,
-            'max_gpu_mm'  => isset($validated['spec_max_gpu_mm']) ? (int) $validated['spec_max_gpu_mm'] : null,
             'max_cooler_mm' => isset($validated['spec_max_cooler_mm']) ? (int) $validated['spec_max_cooler_mm'] : null,
             'type'        => $validated['spec_cooler_type'] ?? null,
             'radiator_mm' => isset($validated['spec_radiator_mm']) ? (int) $validated['spec_radiator_mm'] : null,
@@ -176,6 +176,8 @@ class BuilderProductController extends Controller
             'read_mbs'    => isset($validated['spec_read_mbs']) ? (int) $validated['spec_read_mbs'] : null,
             'write_mbs'   => isset($validated['spec_write_mbs']) ? (int) $validated['spec_write_mbs'] : null,
             'efficiency'  => $validated['spec_efficiency'] ?? null,
+            'max_gpu_length_mm' => isset($validated['spec_max_gpu_mm']) ? (int) $validated['spec_max_gpu_mm'] : null,
+            'length_mm'         => isset($validated['spec_length_mm'])  ? (int) $validated['spec_length_mm']  : null,
         ], fn ($value) => $value !== null && $value !== '');
 
         if ($request->has('spec_rgb')) {

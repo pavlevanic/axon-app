@@ -154,6 +154,7 @@ body { background: var(--builder-bg) !important; }
 .product-thumb img { max-width: 100%; max-height: 100%; object-fit: contain; }
 .product-thumb-placeholder { width: 36px; height: 36px; opacity: 0.2; }
 .product-info { flex: 1; min-width: 0; padding: 10px 14px; }
+.product-mobile-link { margin-top: 5px; }
 .product-name { font-size: 13px; font-weight: 600; color: var(--builder-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px; }
 .product-desc { font-size: 11px; color: var(--builder-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .product-links { display: flex; align-items: center; gap: 6px; padding: 0 10px; flex-shrink: 0; }
@@ -201,6 +202,16 @@ body { background: var(--builder-bg) !important; }
 .summary-price { font-size: 14px; font-weight: 800; color: var(--builder-text); }
 .summary-edit-col { padding: 8px 12px; flex-shrink: 0; }
 .btn-summary-edit { font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 6px; text-transform: uppercase; }
+.summary-edit-col { display: flex; align-items: center; gap: 4px; }
+.summary-icon-btn {
+    display: flex; align-items: center; justify-content: center;
+    width: 30px; height: 30px; border-radius: 6px;
+    border: none; background: none; padding: 0;
+    color: var(--builder-text); cursor: pointer;
+    transition: background 0.15s, opacity 0.15s;
+    text-decoration: none;
+}
+.summary-icon-btn:hover { background: var(--builder-surface2); opacity: 0.8; }
 
 /* Summary totals */
 .summary-total-bar {
@@ -273,21 +284,103 @@ body { background: var(--builder-bg) !important; }
     position: relative;
 }
 .summary-wrap { max-width: 860px; margin: 0 auto; }
+.btn-add-build {
+    display: flex; align-items: center; justify-content: center;
+    width: 100%;
+    background: var(--bs-primary); color: #fff;
+    border: none; border-radius: 8px;
+    font-size: 14px; font-weight: 700;
+    padding: 13px 28px;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.1s;
+}
+.btn-add-build:hover { opacity: 0.9; }
+.btn-add-build:active { transform: scale(0.99); }
+
+.build-warnings-panel { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+.build-warning-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 12px 14px; border-radius: 8px;
+    font-size: 13px; line-height: 1.4;
+}
+.build-warning-item.level-warn  { background: rgba(255,193,7,0.08);  border: 1px solid rgba(255,193,7,0.25);  color: #d4a017; }
+.build-warning-item.level-error { background: rgba(220,53,69,0.08);  border: 1px solid rgba(220,53,69,0.25);  color: #dc3545; }
+.build-warning-item.level-info  { background: rgba(13,110,253,0.08); border: 1px solid rgba(13,110,253,0.25); color: #6ea8fe; }
+.build-warning-icon { flex-shrink: 0; margin-top: 1px; }
+.build-warning-text strong { color: var(--builder-text); font-weight: 700; }
 
 /* Responsive */
 @media (max-width: 991px) {
-    .builder-steps-col { position: relative; top: 0; height: auto; border-right: none; border-bottom: 1px solid var(--builder-border); }
+    .builder-steps-col {
+        position: relative; top: 0; height: auto;
+        border-right: none; border-bottom: 1px solid var(--builder-border);
+        transition: all 0.25s ease;
+        overflow: hidden;
+    }
+    .builder-steps-col.steps-collapsed {
+        border-bottom: none;
+    }
+    .builder-steps-col.steps-collapsed #stepList {
+        display: none !important;
+    }
+    /* Kad je collapsed, col zauzima samo visinu headera */
+    .builder-steps-col.steps-collapsed {
+    min-height: 0 !important;
+    flex: 0 0 auto !important;
+    max-height: none;
+    }
+    .builder-steps-col.steps-collapsed #stepList {
+    display: none !important;
+    }
     .builder-stats-bar { padding: 10px 16px; gap: 10px; }
     .products-search { width: 140px; }
     .products-search:focus { width: 180px; }
     .product-thumb { width: 56px; height: 56px; }
     .product-desc { display: none; }
+    .steps-collapse-icon { font-size: 10px; transition: transform 0.2s; display: inline-block; }
+    .steps-collapsed .steps-collapse-icon { transform: rotate(180deg); }
+    .stats-controls { gap: 4px; }
+    .stats-controls #resTabs { display: none;}
+    .product-links { display: none; }
+    .product-mobile-link { display: block !important; }
 }
 @media (max-width: 576px) {
     .builder-stats-bar .fps-grid { display: none; }
-    .product-links { display: none; }
-    .stats-controls { gap: 4px; }
+    .stats-controls #resTabs { display: none; }
     .fps-summary-grid { grid-template-columns: repeat(2, 1fr); }
+}
+.build-hero {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 20px; margin-bottom: 24px;
+}
+.build-case-img-wrap {
+    width: 220px; height: 220px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--builder-surface); border: 1px solid var(--builder-border);
+    border-radius: 16px; overflow: hidden; padding: 16px;
+}
+.build-case-img-wrap img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.build-case-img-ph { width: 80px; height: 80px; opacity: 0.12; }
+
+.build-meta-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 10px; width: 100%;
+}
+.build-meta-card {
+    background: var(--builder-surface); border: 1px solid var(--builder-border);
+    border-radius: 10px; padding: 12px 14px;
+    display: flex; flex-direction: column; gap: 4px;
+}
+.build-meta-card.is-warn  { border-color: rgba(255,193,7,0.4);  background: rgba(255,193,7,0.06); }
+.build-meta-card.is-error { border-color: rgba(220,53,69,0.4);  background: rgba(220,53,69,0.06); }
+.build-meta-card.is-ok    { border-color: rgba(25,135,84,0.4);  background: rgba(25,135,84,0.06); }
+.build-meta-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--builder-muted); }
+.build-meta-val   { font-size: 18px; font-weight: 800; color: var(--builder-text); letter-spacing: -0.02em; line-height: 1.1; }
+.build-meta-sub   { font-size: 11px; color: var(--builder-muted); }
+
+@media (max-width: 600px) {
+    .build-meta-grid { grid-template-columns: repeat(2, 1fr); }
+    .build-case-img-wrap { width: 160px; height: 160px; }
 }
 </style>
 @endpush
@@ -303,8 +396,8 @@ body { background: var(--builder-bg) !important; }
 
     {{-- ══ LEFT: Koraci (sakriven na summary ekranu) ══ --}}
     <div class="col-lg-3 builder-steps-col" id="stepsCol">
-        <div class="steps-header">
-            <p class="steps-header-label">PC Builder</p>
+        <div class="steps-header" id="stepsHeaderToggle" role="button" aria-expanded="true" aria-controls="stepList" style="cursor:pointer;">
+            <p class="steps-header-label">PC Builder <span class="steps-collapse-icon ms-1">▲</span></p>
             <h1 class="steps-header-title">Složi svoj računar</h1>
         </div>
         <div class="step-list" id="stepList">
@@ -343,11 +436,6 @@ body { background: var(--builder-bg) !important; }
                 Izaberi CPU i GPU
             </div>
             <div class="stats-controls">
-                <div class="res-tabs" id="resTabs">
-                    <button class="res-tab active" data-res="1080">1080p</button>
-                    <button class="res-tab" data-res="1440">1440p</button>
-                    <button class="res-tab" data-res="2160">4K</button>
-                </div>
                 <button type="button" class="theme-toggle" id="themeToggle" aria-label="Promeni temu">
                     <i class="bi bi-sun-fill theme-icon-light"></i>
                     <i class="bi bi-moon-fill theme-icon-dark d-none"></i>
@@ -383,6 +471,17 @@ body { background: var(--builder-bg) !important; }
                 <h2 class="summary-title">Build je kompletan</h2>
                 <p class="summary-subtitle">Pregled svih izabranih komponenti. Klikni "Izmeni" da se vratiš na taj korak.</p>
 
+                <div class="build-hero">
+                    <div class="build-case-img-wrap" id="buildCaseImgWrap">
+                        {{-- JS popunjava --}}
+                    </div>
+                    <div class="build-meta-grid" id="buildMetaGrid">
+                        {{-- JS popunjava --}}
+                    </div>
+                </div>
+
+                <div id="buildWarningsPanel" class="build-warnings-panel"></div>
+
                 {{-- Lista komponenti --}}
                 <div id="summaryComponentList"></div>
 
@@ -392,11 +491,18 @@ body { background: var(--builder-bg) !important; }
                     <span class="summary-total-val" id="summaryTotalPrice">€0</span>
                 </div>
 
+                <form action="{{ route('builder.add-to-cart') }}" method="POST" id="addBuildForm">
+               @csrf
+               <div id="buildComponentIdsContainer"></div>
+               <button type="submit" class="btn-add-build mb-4">
+                  <i class="bi bi-bag me-2"></i>Dodaj ceo PC u korpu
+                </button>
+               </form>
                 {{-- Benchmark panel --}}
                 <div class="benchmark-panel">
                     <div class="benchmark-header">
                         <div>
-                            <p class="benchmark-title">Procenjene performanse</p>
+                            <p class="benchmark-title">Procena performansi</p>
                             <div class="benchmark-score-wrap">
                                 <span class="benchmark-score" id="summaryTimeSpy">—</span>
                                 <span class="benchmark-score-label">3DMark Time Spy</span>
@@ -416,7 +522,7 @@ body { background: var(--builder-bg) !important; }
                 {{-- Akcije --}}
                 <div class="summary-actions">
                     <button class="btn btn-outline-secondary" onclick="axonBuilderBackToEdit()">
-                        ← Vrati se na izmenu
+                        ←Nazad
                     </button>
                     <button class="btn btn-outline-danger btn-sm ms-auto" onclick="axonBuilderReset()">
                         Novi build
